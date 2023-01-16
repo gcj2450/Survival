@@ -14,8 +14,6 @@ public class test1 : MonoBehaviour
         clients.StartTCPClient();
           
         
-
-
         sender.onClick.AddListener(() =>
         {
             clients.SendTCP("WWWHHHHHAAAATTTSS UUUPPP TCP!!!");
