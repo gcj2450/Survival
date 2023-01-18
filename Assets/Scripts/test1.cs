@@ -1,22 +1,25 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class test1 : MonoBehaviour
 {
-    Clients clients = new Clients();
-
+    
     [SerializeField] private Button sender;
     [SerializeField] private Button udpsend;
 
     // Start is called before the first frame update
     void Start()
     {
-        clients.StartTCPClient();
-          
+        Clients.StartTCPClient();
+        Encryption.PrepareSecureConnection();
+
+        StartCoroutine(test());  
+
         
         sender.onClick.AddListener(() =>
         {
-            clients.SendTCP("WWWHHHHHAAAATTTSS UUUPPP TCP!!!");
+            Clients.SendTCP("WWWHHHHHAAAATTTSS UUUPPP TCP!!!");
         });
 
         udpsend.onClick.AddListener(() =>
@@ -27,8 +30,12 @@ public class test1 : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        clients.StopAllClients();
+        Clients.StopAllClients();
     }
 
-
+    private IEnumerator test()
+    {
+        yield return new WaitForSeconds(3);
+        print(Clients.SendTCP(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, true));
+    }
 }

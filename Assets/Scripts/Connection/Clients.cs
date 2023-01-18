@@ -1,49 +1,54 @@
 using UnityEngine;
 
-public class Clients
+public static class Clients
 {
-    public bool isTCPClientActive { get; private set; }
-    public bool isUDPClientActive { get; private set; }
+    public static bool isTCPClientActive { get; private set; }
+    public static bool isUDPClientActive { get; private set; }
+
 
 
     private const string SERVER_IP = "192.168.0.108";
     private const int TCP_PORT = 3000;
     private const int UDP_PORT = 3001;
 
-    private TCPClient tcpClient;
-    private UDPClient udpClient;
+    private static TCPClient tcpClient;
+    private static UDPClient udpClient;
 
 
-    public void StartTCPClient()
+    public static bool StartTCPClient()
     {
         try
         {
             tcpClient = new TCPClient(SERVER_IP, TCP_PORT);
             tcpClient.ConnectAsync();
             isTCPClientActive = true;
+            return true;
         }
         catch (System.Exception ex)
         {
             Debug.Log(ex);
+            return false;
         }
         
     }
 
-    public void StartUDPClient()
+    public static bool StartUDPClient()
     {
         try
         {
             udpClient = new UDPClient(SERVER_IP, UDP_PORT);
             udpClient.Connect();
             isUDPClientActive = true;
+            return true;
         }
         catch (System.Exception ex)
         {
             Debug.Log(ex);
+            return false;
         }
     }
 
-    public void StopTCPClient()
+    public static void StopTCPClient()
     {
         if (isTCPClientActive)
         {
@@ -52,7 +57,7 @@ public class Clients
         }        
     }
 
-    public void StopUDPClient()
+    public static void StopUDPClient()
     {
         if (isUDPClientActive)
         {
@@ -61,17 +66,26 @@ public class Clients
         }        
     }
 
-    public void StopAllClients()
+    public static void StopAllClients()
     {
         StopTCPClient();
         StopUDPClient();
     }
 
-    public bool SendTCP(byte[] data)
+    public static bool SendTCP(byte[] data, bool isEncrypted)
     {
         if (isTCPClientActive && tcpClient != null) 
         {
-            return tcpClient.SendAsync(data);
+            if (isEncrypted)
+            {
+                Encryption.Encode(ref data, Globals.RSASecretCode, Globals.ClientNetworkID);
+                
+                return tcpClient.SendAsync(data);
+            }
+            else
+            {
+                return tcpClient.SendAsync(data);
+            }            
         }
         else
         {
@@ -79,7 +93,7 @@ public class Clients
         }
     }
 
-    public bool SendTCP(string data)
+    public static bool SendTCP(string data)
     {
         if (isTCPClientActive && tcpClient != null)
         {

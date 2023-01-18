@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -8,7 +9,7 @@ using TcpClient = NetCoreServer.TcpClient;
 public class TCPClient : TcpClient
 {
     public TCPClient(string address, int port) : base(address, port) { }
-
+    public static ConcurrentQueue<byte[]> ReceivedTCPPacket = new ConcurrentQueue<byte[]>();
     public void DisconnectAndStop()
     {        
         DisconnectAsync();
@@ -29,8 +30,10 @@ public class TCPClient : TcpClient
 
     protected override void OnReceived(byte[] buffer, long offset, long size)
     {
-        UnityEngine.Debug.Log(Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
-        SendAsync("OK!!!");
+        //UnityEngine.Debug.Log(Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
+        //SendAsync("OK!!!");
+        ReadOnlySpan<byte> packet = buffer.AsSpan(0, (int)size);        
+        ReceivedTCPPacket.Enqueue(packet.ToArray());
     }
 
     protected override void OnError(SocketError error)

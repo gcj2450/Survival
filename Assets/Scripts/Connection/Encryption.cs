@@ -3,49 +3,109 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
+using ProtoBuf;
+using System.IO;
 
-public class Encryption : IDisposable
+public class Encryption
 {
-    private RSAParameters privateKey, publicKey;
-    public string publicKeyInString;
-    private RSACryptoServiceProvider csp;
+    private static RSAParameters publicKey;    
+    private static RSACryptoServiceProvider csp;
 
-    public Encryption()
+    public static void PrepareSecureConnection()
     {
-
-        //create keys
+        Globals.RSASecretCode = GetRandom256Code();
         csp = new RSACryptoServiceProvider(2048);
-        privateKey = csp.ExportParameters(true);
-        publicKey = csp.ExportParameters(false);
 
-
-
-        //conver key into string
-        var sw = new System.IO.StringWriter();
-        var xs = new System.Xml.Serialization.XmlSerializer(typeof(RSAParameters));
-        xs.Serialize(sw, publicKey);
-        publicKeyInString = sw.ToString();
-
+        if (Clients.isTCPClientActive)
+        {
+            ExchangeData();
+        }
     }
 
-    public byte[] GetSecretKey(string encoded_bytes)
+    private static async void ExchangeData()
+    {
+        try
+        {
+            Clients.SendTCP(new byte[] { 0, 0 }, false);
+            RSAExchange receivedExcange = await GetpublicKeyFromServer();
+            Globals.ClientNetworkID = BitConverter.GetBytes(receivedExcange.TemporaryKeyCode);
+            string key = receivedExcange.PublicKey;
+
+            publicKey = GetSecretKey(key);
+
+            csp.ImportParameters(publicKey);
+            string keyBackInString = GetSecretKey(csp.Encrypt(Globals.RSASecretCode, false));
+
+            RSAExchange exchange = new RSAExchange(receivedExcange.TemporaryKeyCode, keyBackInString);
+
+            byte[] packet = Array.Empty<byte>();
+            using (var stream = new MemoryStream())
+            {
+                Serializer.Serialize(stream, exchange);
+                packet = stream.ToArray();
+            }
+
+            byte[] resultPacket = new byte[] { 0, 1 }.Concat(packet).ToArray();
+            Clients.SendTCP(resultPacket, false);
+        }
+        catch (Exception)
+        {
+            Debug.Log("error exchanging secret keys with server!");
+        } 
+        finally
+        {
+            csp.Dispose();
+        }        
+    }
+
+
+    private static async Task<RSAExchange> GetpublicKeyFromServer()
+    {
+        byte[] result = Array.Empty<byte>();
+        RSAExchange exchange = new RSAExchange();
+
+        for (int i = 0; i < 100; i++)
+        {
+            if (TCPClient.ReceivedTCPPacket.Count> 0)
+            {                
+                bool isOK = TCPClient.ReceivedTCPPacket.TryDequeue(out result);
+
+                if (isOK) 
+                {                    
+                    using (Stream stream = new MemoryStream(result))
+                    {
+                        exchange = Serializer.Deserialize<RSAExchange>(stream);                        
+                    }
+                    
+                    return exchange;
+                }
+            }
+            await Task.Delay(20);
+        }
+
+        return exchange;
+    }
+
+    public static string GetSecretKey(byte [] encoded_secret_key)
+    {
+        //conver bytes to normal string
+        var sw = new System.IO.StringWriter();
+        var xs = new System.Xml.Serialization.XmlSerializer(typeof(byte[]));
+        xs.Serialize(sw, encoded_secret_key);
+        return sw.ToString();
+    }
+
+    public static RSAParameters GetSecretKey(string key)
     {
         //getting back real public key by public key string
-        var sr = new System.IO.StringReader(encoded_bytes);
-        var xs = new System.Xml.Serialization.XmlSerializer(typeof(byte[]));
-        byte[] preres = (byte[])xs.Deserialize(sr);
-
-        byte[] res = csp.Decrypt(preres, false);
-        //Console.WriteLine("secret key is - " + FromByteToString(res));
-        return res;
+        var sr = new System.IO.StringReader(key);
+        var xs = new System.Xml.Serialization.XmlSerializer(typeof(RSAParameters));
+        return (RSAParameters)xs.Deserialize(sr);
     }
 
-
-    public void Dispose()
-    {
-        csp.Dispose();
-    }
 
     public byte[] GetByteArrFromCharByChar(string key_in_string)
     {
@@ -85,30 +145,20 @@ public class Encryption : IDisposable
 
 
 
-    public static void Encode(ref byte[] source, byte[] key)
+    public static void Encode(ref byte[] source, byte[] key, byte[] networkID)
     {
         if (source == null || key == null)
-        {
-            source = new byte[] { 0 };
+        {            
             return;
         }
 
+        int index = source.Length < key.Length ? source.Length : key.Length;
 
-        int index = 0;
-
-        for (int i = 6; i < source.Length; i++)
+        for (int i = 0; i < index; i++)
         {
-            source[i] = (byte)(source[i] + key[index]);
-
-            if ((index + 1) == key.Length)
-            {
-                index = 0;
-            }
-            else
-            {
-                index++;
-            }
+            source[i] = (byte)(source[i] + key[i]);
         }
+        source = networkID.Concat(source).ToArray();
     }
 
 
@@ -161,5 +211,24 @@ public class Encryption : IDisposable
     {
         SHA384 create_hash = SHA384.Create();
         return create_hash.ComputeHash(Encoding.UTF8.GetBytes(data));
+    }
+
+    public static byte[] GetRandom256Code()
+    {
+        SHA256 sh = new SHA256Managed();
+        return sh.ComputeHash(Encoding.UTF8.GetBytes(GetRandomSymbols(256)));
+    }
+
+    public static string GetRandomSymbols(int nub_of_symb)
+    {
+        string[] arr_name = { "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "a", "s", "d", "f", "g", "h", "j", "k", "l", "z", "x", "c", "v", "b", "n", "m", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "A", "S", "D", "F", "G", "H", "J", "K", "L", "Z", "X", "C", "V", "B", "N", "M", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" };
+        string result = "";
+        System.Random rnd = new System.Random();
+        for (int i = 0; i < nub_of_symb; i++)
+        {
+            result = result + arr_name[rnd.Next(0, arr_name.Length - 1)];
+        }
+
+        return result;
     }
 }
