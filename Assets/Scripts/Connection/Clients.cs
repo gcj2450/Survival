@@ -13,8 +13,7 @@ public static class Clients
 
     private static TCPClient tcpClient;
     private static UDPClient udpClient;
-
-
+        
     public static bool StartTCPClient()
     {
         try
@@ -72,13 +71,13 @@ public static class Clients
         StopUDPClient();
     }
 
-    public static bool SendTCP(byte[] data, bool isEncrypted)
+    public static bool SendTCP(byte[] data, bool isEncrypted, Globals.PacketCode code)
     {
         if (isTCPClientActive && tcpClient != null) 
         {
             if (isEncrypted)
             {
-                Encryption.Encode(ref data, Globals.RSASecretCode, Globals.ClientNetworkID);
+                Encryption.Encode(ref data, Globals.RSASecretCode, Globals.ClientNetworkID, (byte)code);
                 
                 return tcpClient.SendAsync(data);
             }

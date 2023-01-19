@@ -3,18 +3,17 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class test1 : MonoBehaviour
-{
-    
+{    
     [SerializeField] private Button sender;
     [SerializeField] private Button udpsend;
-
+        
     // Start is called before the first frame update
     void Start()
     {
         Clients.StartTCPClient();
         Encryption.PrepareSecureConnection();
 
-        StartCoroutine(test());  
+        //StartCoroutine(test());  
 
         
         sender.onClick.AddListener(() =>
@@ -36,6 +35,6 @@ public class test1 : MonoBehaviour
     private IEnumerator test()
     {
         yield return new WaitForSeconds(3);
-        print(Clients.SendTCP(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, true));
+        print(Clients.SendTCP(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, true, Globals.PacketCode.None));
     }
 }

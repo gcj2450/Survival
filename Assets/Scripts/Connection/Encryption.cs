@@ -29,7 +29,7 @@ public class Encryption
     {
         try
         {
-            Clients.SendTCP(new byte[] { 0, 0 }, false);
+            Clients.SendTCP(new byte[] { 0, 0, 0 }, false, Globals.PacketCode.None);
             RSAExchange receivedExcange = await GetpublicKeyFromServer();
             Globals.ClientNetworkID = BitConverter.GetBytes(receivedExcange.TemporaryKeyCode);
             string key = receivedExcange.PublicKey;
@@ -48,8 +48,8 @@ public class Encryption
                 packet = stream.ToArray();
             }
 
-            byte[] resultPacket = new byte[] { 0, 1 }.Concat(packet).ToArray();
-            Clients.SendTCP(resultPacket, false);
+            byte[] resultPacket = new byte[] { 0, 1, 0 }.Concat(packet).ToArray();
+            Clients.SendTCP(resultPacket, false, Globals.PacketCode.None);
         }
         catch (Exception)
         {
@@ -145,7 +145,7 @@ public class Encryption
 
 
 
-    public static void Encode(ref byte[] source, byte[] key, byte[] networkID)
+    public static void Encode(ref byte[] source, byte[] key, byte[] networkID, byte code)
     {
         if (source == null || key == null)
         {            
@@ -158,7 +158,7 @@ public class Encryption
         {
             source[i] = (byte)(source[i] + key[i]);
         }
-        source = networkID.Concat(source).ToArray();
+        source = networkID.Concat(new byte[1] {code}).Concat(source).ToArray();
     }
 
 
