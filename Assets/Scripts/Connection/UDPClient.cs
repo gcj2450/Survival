@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading;
 using UdpClient = NetCoreServer.UdpClient;
 using UnityEngine;
+using System.Collections.Concurrent;
 
 public class UDPClient : UdpClient
 {
     public UDPClient(string address, int port) : base(address, port) { }
+    public static ConcurrentQueue<byte[]> ReceivedTCPPacket = new ConcurrentQueue<byte[]>();
 
     public void DisconnectAndStop()
     {       
@@ -20,8 +22,7 @@ public class UDPClient : UdpClient
     protected override void OnConnected()
     {
         UnityEngine.Debug.Log($"Echo UDP client connected a new session with Id {Id}");
-
-        // Start receive datagrams
+                
         ReceiveAsync();
     }
 
@@ -32,9 +33,8 @@ public class UDPClient : UdpClient
 
     protected override void OnReceived(EndPoint endpoint, byte[] buffer, long offset, long size)
     {
-        UnityEngine.Debug.Log("Incoming: " + Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
-
-        // Continue receive datagrams
+        //UnityEngine.Debug.Log("Incoming: " + Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
+                
         ReceiveAsync();
     }
 

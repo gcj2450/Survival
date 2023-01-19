@@ -13,7 +13,7 @@ public class test1 : MonoBehaviour
         Clients.StartTCPClient();
         Encryption.PrepareSecureConnection();
 
-        //StartCoroutine(test());  
+        StartCoroutine(test());  
 
         
         sender.onClick.AddListener(() =>
@@ -35,6 +35,12 @@ public class test1 : MonoBehaviour
     private IEnumerator test()
     {
         yield return new WaitForSeconds(3);
-        print(Clients.SendTCP(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }, true, Globals.PacketCode.None));
+        for (int i = 0; i < 20; i++)
+        {
+            //Clients.SendTCP(ProtobufSchemes.Serialize_ProtoBuf(new MovementPacket(0.1544f, 0.8788f)), true, Globals.PacketCode.None);
+            Clients.SendTCP(new byte[] {12,45,78,87,74,78,98,78,12,36,54,74, 12, 45, 78, 87, 74, 78, 98, 78, 12, 36, 54, 74, 12, 45, 78, 87, 74, 78, 98, 78, 12, 36, 54, 74, 12, 45, 78, 87, 74, 78, 98, 78, 12, 36, 54, 74 }, true, Globals.PacketCode.None);
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+        
     }
 }

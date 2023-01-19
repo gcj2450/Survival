@@ -10,6 +10,7 @@ public class TCPClient : TcpClient
 {
     public TCPClient(string address, int port) : base(address, port) { }
     public static ConcurrentQueue<byte[]> ReceivedTCPPacket = new ConcurrentQueue<byte[]>();
+
     public void DisconnectAndStop()
     {        
         DisconnectAsync();
@@ -19,12 +20,12 @@ public class TCPClient : TcpClient
 
     protected override void OnConnected()
     {
-        Console.WriteLine($"Chat TCP client connected a new session with Id {Id}");
+        UnityEngine.Debug.Log($"Chat TCP client connected a new session with Id {Id}");
     }
 
     protected override void OnDisconnected()
     {
-        Console.WriteLine($"Chat TCP client disconnected a session with Id {Id}");
+        UnityEngine.Debug.Log($"Chat TCP client disconnected a session with Id {Id}");
 
     }
 
@@ -38,6 +39,6 @@ public class TCPClient : TcpClient
 
     protected override void OnError(SocketError error)
     {
-        Console.WriteLine($"Chat TCP client caught an error with code {error}");
+        UnityEngine.Debug.Log($"Chat TCP client caught an error with code {error}");
     }
 }

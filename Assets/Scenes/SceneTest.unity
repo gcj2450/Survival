@@ -217,6 +217,7 @@ GameObject:
   m_Component:
   - component: {fileID: 595740619}
   - component: {fileID: 595740618}
+  - component: {fileID: 595740620}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -301,6 +302,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &595740620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 595740617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 1
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
 --- !u!1 &1184538651
 GameObject:
   m_ObjectHideFlags: 0
@@ -471,6 +492,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2929252283123773938, guid: aaa2c939c0359ac4dbce3f49e8b90252, type: 3}
   m_PrefabInstance: {fileID: 1747163927}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1768958489 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2929252283123773951, guid: aaa2c939c0359ac4dbce3f49e8b90252, type: 3}
+  m_PrefabInstance: {fileID: 1747163927}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45977bbae16431c46a013576a1aea384, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1773696438
 GameObject:
   m_ObjectHideFlags: 0
@@ -601,6 +633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9af57ce6b49944244acff1f3e8eadd2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  joystick: {fileID: 1768958489}
 --- !u!4 &2054800732
 Transform:
   m_ObjectHideFlags: 0

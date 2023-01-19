@@ -78,7 +78,6 @@ public static class Clients
             if (isEncrypted)
             {
                 Encryption.Encode(ref data, Globals.RSASecretCode, Globals.ClientNetworkID, (byte)code);
-                
                 return tcpClient.SendAsync(data);
             }
             else
@@ -97,6 +96,26 @@ public static class Clients
         if (isTCPClientActive && tcpClient != null)
         {
             return tcpClient.SendAsync(data);
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public static bool SendUDP(byte[] data, bool isEncrypted, Globals.PacketCode code)
+    {
+        if (isUDPClientActive && udpClient != null)
+        {
+            if (isEncrypted)
+            {
+                Encryption.Encode(ref data, Globals.RSASecretCode, Globals.ClientNetworkID, (byte)code);
+                return udpClient.SendAsync(data);
+            }
+            else
+            {
+                return udpClient.SendAsync(data);
+            }
         }
         else
         {
