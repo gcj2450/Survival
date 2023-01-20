@@ -1,24 +1,35 @@
 using UnityEngine;
 
-public static class Clients
+public class Clients
 {
-    public static bool isTCPClientActive { get; private set; }
-    public static bool isUDPClientActive { get; private set; }
+    public bool isTCPClientActive { get; private set; }
+    public bool isUDPClientActive { get; private set; }
 
+    private static Clients instance;
+    private Clients() 
+    {
+        StartTCPClient();
+        StartUDPClient();
+    }
+    public static Clients GetInstance()
+    {
+        if (instance == null)
+        {
+            instance = new Clients();
+        }
+        return instance;
+    }
 
+    
 
-    private const string SERVER_IP = "192.168.0.108";
-    private const int TCP_PORT = 3000;
-    private const int UDP_PORT = 3001;
-
-    private static TCPClient tcpClient;
-    private static UDPClient udpClient;
+    private TCPClient tcpClient;
+    private UDPClient udpClient;
         
-    public static bool StartTCPClient()
+    private bool StartTCPClient()
     {
         try
         {
-            tcpClient = new TCPClient(SERVER_IP, TCP_PORT);
+            tcpClient = new TCPClient(Globals.SERVER_IP, Globals.TCP_PORT);
             tcpClient.ConnectAsync();
             isTCPClientActive = true;
             return true;
@@ -31,11 +42,11 @@ public static class Clients
         
     }
 
-    public static bool StartUDPClient()
+    private bool StartUDPClient()
     {
         try
         {
-            udpClient = new UDPClient(SERVER_IP, UDP_PORT);
+            udpClient = new UDPClient(Globals.SERVER_IP, Globals.UDP_PORT);
             udpClient.Connect();
             isUDPClientActive = true;
             return true;
@@ -47,7 +58,14 @@ public static class Clients
         }
     }
 
-    public static void StopTCPClient()
+    public void StopClients()
+    {
+        StopTCPClient();
+        StopUDPClient();
+        instance = null;
+    }
+
+    private void StopTCPClient()
     {
         if (isTCPClientActive)
         {
@@ -56,7 +74,7 @@ public static class Clients
         }        
     }
 
-    public static void StopUDPClient()
+    private void StopUDPClient()
     {
         if (isUDPClientActive)
         {
@@ -65,13 +83,7 @@ public static class Clients
         }        
     }
 
-    public static void StopAllClients()
-    {
-        StopTCPClient();
-        StopUDPClient();
-    }
-
-    public static bool SendTCP(byte[] data, bool isEncrypted, Globals.PacketCode code)
+    public bool SendTCP(byte[] data, bool isEncrypted, Globals.PacketCode code)
     {
         if (isTCPClientActive && tcpClient != null) 
         {
@@ -91,7 +103,7 @@ public static class Clients
         }
     }
 
-    public static bool SendTCP(string data)
+    public bool SendTCP(string data)
     {
         if (isTCPClientActive && tcpClient != null)
         {
@@ -103,7 +115,7 @@ public static class Clients
         }
     }
 
-    public static bool SendUDP(byte[] data, bool isEncrypted, Globals.PacketCode code)
+    public bool SendUDP(byte[] data, bool isEncrypted, Globals.PacketCode code)
     {
         if (isUDPClientActive && udpClient != null)
         {

@@ -6,6 +6,9 @@ public class Globals : MonoBehaviour
 {
     public static byte[] RSASecretCode;
     public static byte[] ClientNetworkID;
+    public const string SERVER_IP = "192.168.0.108";
+    public const int TCP_PORT = 3000;
+    public const int UDP_PORT = 3001;
 
     public enum PacketCode
     {

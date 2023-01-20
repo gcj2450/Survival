@@ -8,18 +8,22 @@ using System.Threading.Tasks;
 using UnityEngine;
 using ProtoBuf;
 using System.IO;
+using Unity.VisualScripting;
+using UnityEditor.MemoryProfiler;
 
 public class Encryption
 {
     private static RSAParameters publicKey;    
     private static RSACryptoServiceProvider csp;
+    private static Clients connections;
 
     public static void PrepareSecureConnection()
     {
+        connections = Clients.GetInstance();
         Globals.RSASecretCode = GetRandom256Code();
         csp = new RSACryptoServiceProvider(2048);
 
-        if (Clients.isTCPClientActive)
+        if (connections.isTCPClientActive)
         {
             ExchangeData();
         }
@@ -29,7 +33,7 @@ public class Encryption
     {
         try
         {
-            Clients.SendTCP(new byte[] { 0, 0, 0 }, false, Globals.PacketCode.None);
+            connections.SendTCP(new byte[] { 0, 0, 0 }, false, Globals.PacketCode.None);
             RSAExchange receivedExcange = await GetpublicKeyFromServer();
             Globals.ClientNetworkID = BitConverter.GetBytes(receivedExcange.TemporaryKeyCode);
             string key = receivedExcange.PublicKey;
@@ -49,7 +53,7 @@ public class Encryption
             }
 
             byte[] resultPacket = new byte[] { 0, 1, 0 }.Concat(packet).ToArray();
-            Clients.SendTCP(resultPacket, false, Globals.PacketCode.None);
+            connections.SendTCP(resultPacket, false, Globals.PacketCode.None);
         }
         catch (Exception)
         {
