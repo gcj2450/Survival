@@ -29,8 +29,8 @@ public class SceneTest1 : MonoBehaviour
         if (Mathf.Abs(joystick.Horizontal) > 0 || Mathf.Abs(joystick.Vertical) > 0)
         {
 
-            //byte[] bytes = ProtobufSchemes.SerializeProtoBuf(new MovementPacket(joystick.Horizontal, joystick.Vertical));
-            //connections.SendUDP(bytes, true, Globals.PacketCode.Move);
+            byte[] bytes = ProtobufSchemes.SerializeProtoBuf(new MovementPacket(joystick.Horizontal, joystick.Vertical));
+            connections.SendUDP(bytes, true, Globals.PacketCode.Move);
 
             //float brutto_angle = Mathf.Asin(joystick.Vertical / joystick.Horizontal);
             float brutto_angle = Mathf.Atan2(joystick.Horizontal, joystick.Vertical) * 180 / Mathf.PI;

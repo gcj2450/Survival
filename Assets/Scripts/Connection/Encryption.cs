@@ -6,10 +6,6 @@ using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using ProtoBuf;
-using System.IO;
-using Unity.VisualScripting;
-using UnityEditor.MemoryProfiler;
 
 public class Encryption
 {
@@ -33,7 +29,7 @@ public class Encryption
     {
         try
         {
-            connections.SendTCP(new byte[] { 0, 0, 0 }, false, Globals.PacketCode.None);
+            connections.SendTCP(new byte[] { 0, 1, 0 }, false, Globals.PacketCode.None);
             RSAExchange receivedExcange = await GetpublicKeyFromServer();
             Globals.ClientNetworkID = BitConverter.GetBytes(receivedExcange.TemporaryKeyCode);
             string key = receivedExcange.PublicKey;
@@ -43,16 +39,11 @@ public class Encryption
             csp.ImportParameters(publicKey);
             string keyBackInString = GetSecretKey(csp.Encrypt(Globals.RSASecretCode, false));
 
-            RSAExchange exchange = new RSAExchange(receivedExcange.TemporaryKeyCode, keyBackInString);
+            RSAExchange exchange = new RSAExchange(receivedExcange.TemporaryKeyCode, keyBackInString, Globals.TicketID);
 
-            byte[] packet = Array.Empty<byte>();
-            using (var stream = new MemoryStream())
-            {
-                Serializer.Serialize(stream, exchange);
-                packet = stream.ToArray();
-            }
+            byte[] packet = ProtobufSchemes.SerializeProtoBuf(exchange);
 
-            byte[] resultPacket = new byte[] { 0, 1, 0 }.Concat(packet).ToArray();
+            byte[] resultPacket = new byte[] { 0, 2, 0 }.Concat(packet).ToArray();
             connections.SendTCP(resultPacket, false, Globals.PacketCode.None);
         }
         catch (Exception)
@@ -69,28 +60,21 @@ public class Encryption
     private static async Task<RSAExchange> GetpublicKeyFromServer()
     {
         byte[] result = Array.Empty<byte>();
-        RSAExchange exchange = new RSAExchange();
 
         for (int i = 0; i < 100; i++)
         {
             if (TCPClient.ReceivedTCPPacket.Count> 0)
             {                
                 bool isOK = TCPClient.ReceivedTCPPacket.TryDequeue(out result);
-
-                if (isOK) 
-                {                    
-                    using (Stream stream = new MemoryStream(result))
-                    {
-                        exchange = Serializer.Deserialize<RSAExchange>(stream);                        
-                    }
-                    
-                    return exchange;
+                if (isOK)
+                {
+                    return ProtobufSchemes.DeserializeProtoBuf<RSAExchange>(result);
                 }
             }
             await Task.Delay(20);
         }
 
-        return exchange;
+        return new RSAExchange();
     }
 
     public static string GetSecretKey(byte [] encoded_secret_key)

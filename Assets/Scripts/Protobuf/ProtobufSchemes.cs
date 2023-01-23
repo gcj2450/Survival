@@ -32,11 +32,14 @@ public struct RSAExchange
     public int TemporaryKeyCode { get; set; }
     [ProtoMember(2)]
     public string PublicKey { get; set; }
+    [ProtoMember(3)]
+    public int TicketID { get; set; }
 
-    public RSAExchange(int TemporaryKeyCode, string PublicKey)
+    public RSAExchange(int TemporaryKeyCode, string PublicKey, int ticket)
     {
         this.TemporaryKeyCode = TemporaryKeyCode;
         this.PublicKey = PublicKey;
+        TicketID = ticket;
     }
 }
 
