@@ -32,9 +32,8 @@ public class TCPClient : TcpClient
     protected override void OnReceived(byte[] buffer, long offset, long size)
     {
         //UnityEngine.Debug.Log(Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
-        //SendAsync("OK!!!");
-        ReadOnlySpan<byte> packet = buffer.AsSpan(0, (int)size);        
-        ReceivedTCPPacket.Enqueue(packet.ToArray());
+        //SendAsync("OK!!!"); 
+        ReceivedTCPPacket.Enqueue(buffer.AsSpan(0, (int)size).ToArray());
     }
 
     protected override void OnError(SocketError error)

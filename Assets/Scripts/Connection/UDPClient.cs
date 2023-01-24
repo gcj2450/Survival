@@ -10,7 +10,7 @@ using System.Collections.Concurrent;
 public class UDPClient : UdpClient
 {
     public UDPClient(string address, int port) : base(address, port) { }
-    public static ConcurrentQueue<byte[]> ReceivedTCPPacket = new ConcurrentQueue<byte[]>();
+    public static ConcurrentQueue<byte[]> ReceivedUDPPacket = new ConcurrentQueue<byte[]>();
 
     public void DisconnectAndStop()
     {       
@@ -34,7 +34,8 @@ public class UDPClient : UdpClient
     protected override void OnReceived(EndPoint endpoint, byte[] buffer, long offset, long size)
     {
         //UnityEngine.Debug.Log("Incoming: " + Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
-                
+        ReceivedUDPPacket.Enqueue(buffer.AsSpan(0, (int)size).ToArray());
+
         ReceiveAsync();
     }
 

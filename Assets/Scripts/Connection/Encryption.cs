@@ -6,6 +6,8 @@ using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using Mono.Cecil.Cil;
+using UnityEngine.Networking.Types;
 
 public class Encryption
 {
@@ -45,6 +47,8 @@ public class Encryption
 
             byte[] resultPacket = new byte[] { 0, 2, 0 }.Concat(packet).ToArray();
             connections.SendTCP(resultPacket, false, Globals.PacketCode.None);
+            await Task.Delay(100);
+            connections.SendUDP(new byte[] { 0 }, true, Globals.PacketCode.GetClientUDPEndpoint);
         }
         catch (Exception)
         {
@@ -133,7 +137,7 @@ public class Encryption
 
 
 
-    public static void Encode(ref byte[] source, byte[] key, byte[] networkID, byte code)
+    public static void Encode(ref byte[] source, byte[] key, byte[] networkID, Globals.PacketCode code)
     {
         if (source == null || key == null)
         {            
@@ -146,7 +150,7 @@ public class Encryption
         {
             source[i] = (byte)(source[i] + key[i]);
         }
-        source = networkID.Concat(new byte[1] {code}).Concat(source).ToArray();
+        source = networkID.Concat(new byte[1] {(byte)code}).Concat(source).ToArray();
     }
 
 
@@ -154,23 +158,12 @@ public class Encryption
     {
         if (source.Length == 0 || key.Length == 0) return;
 
-        int index = 0;
+        int index = source.Length < key.Length ? source.Length : key.Length;
 
-        for (int i = 6; i < source.Length; i++)
+        for (int i = 0; i < index; i++)
         {
-            source[i] = (byte)(source[i] - key[index]);
-
-            if ((index + 1) == key.Length)
-            {
-                index = 0;
-            }
-            else
-            {
-                index++;
-            }
+            source[i] = (byte)(source[i] - key[i]);
         }
-
-
     }
 
     public static string FromByteToString(byte[] data)

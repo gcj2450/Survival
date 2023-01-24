@@ -89,7 +89,7 @@ public class Clients
         {
             if (isEncrypted)
             {
-                Encryption.Encode(ref data, Globals.RSASecretCode, Globals.ClientNetworkID, (byte)code);
+                Encryption.Encode(ref data, Globals.RSASecretCode, Globals.ClientNetworkID, code);
                 return tcpClient.SendAsync(data);
             }
             else
@@ -121,7 +121,7 @@ public class Clients
         {
             if (isEncrypted)
             {
-                Encryption.Encode(ref data, Globals.RSASecretCode, Globals.ClientNetworkID, (byte)code);
+                Encryption.Encode(ref data, Globals.RSASecretCode, Globals.ClientNetworkID, code);
                 return udpClient.SendAsync(data);
             }
             else

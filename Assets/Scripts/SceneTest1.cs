@@ -1,7 +1,7 @@
+using NetCoreServer;
 using System;
 using System.Threading;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class SceneTest1 : MonoBehaviour
 {
@@ -12,6 +12,8 @@ public class SceneTest1 : MonoBehaviour
     private CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
     private CancellationToken token;
 
+    private Vector2 sumOfJoystickInput;
+
     [SerializeField] private Joystick joystick;
     [SerializeField] private GameObject obj;
     private Clients connections;
@@ -21,6 +23,7 @@ public class SceneTest1 : MonoBehaviour
     {
         connections = Clients.GetInstance();
         Encryption.PrepareSecureConnection();
+        SetTimer();
     }
 
     // Update is called once per frame
@@ -28,10 +31,11 @@ public class SceneTest1 : MonoBehaviour
     {
         if (Mathf.Abs(joystick.Horizontal) > 0 || Mathf.Abs(joystick.Vertical) > 0)
         {
+            sumOfJoystickInput += joystick.Direction;
+            //byte[] bytes = ProtobufSchemes.SerializeProtoBuf(new MovementPacketFromClient(joystick.Horizontal, joystick.Vertical, false));
+            //connections.SendUDP(bytes, true, Globals.PacketCode.MoveFromClient);
 
-            byte[] bytes = ProtobufSchemes.SerializeProtoBuf(new MovementPacket(joystick.Horizontal, joystick.Vertical));
-            connections.SendUDP(bytes, true, Globals.PacketCode.Move);
-
+            /*
             //float brutto_angle = Mathf.Asin(joystick.Vertical / joystick.Horizontal);
             float brutto_angle = Mathf.Atan2(joystick.Horizontal, joystick.Vertical) * 180 / Mathf.PI;
             float new_position_x = obj.transform.position.x + MathF.Sin(brutto_angle * Mathf.Deg2Rad)/100f;//vert_touch
@@ -40,12 +44,31 @@ public class SceneTest1 : MonoBehaviour
 
             obj.transform.position = new Vector3(new_position_x, 0, new_position_z);
             obj.transform.eulerAngles = new Vector3(0, brutto_angle, 0);
-        }            
+            */
+        }         
+        
+        if (UDPClient.ReceivedUDPPacket.Count > 0)
+        {            
+            byte[] packet = Array.Empty<byte>();
+
+            if (UDPClient.ReceivedUDPPacket.TryDequeue(out packet))
+            {
+                if (packet[0] == (byte)Globals.PacketCode.MoveFromServer)
+                {
+                    byte[] data = Encryption.TakeSomeToArrayFromNumber(packet, 1);
+                    Encryption.Decode(ref data, Globals.RSASecretCode);
+                    MovementPacketFromServer mover = ProtobufSchemes.DeserializeProtoBuf<MovementPacketFromServer>(data);
+                    obj.transform.position = new Vector3(mover.PositionX, 0, mover.PositionZ);
+                    obj.transform.eulerAngles = new Vector3(0, mover.RotationY, 0);
+                }
+            }
+        }
     }
 
     private void OnApplicationQuit()
     {
         connections.StopClients();
+        cancelTokenSource.Cancel();
     }
 
     private void SetTimer()
@@ -78,6 +101,12 @@ public class SceneTest1 : MonoBehaviour
 
         try
         {
+            if (sumOfJoystickInput != Vector2.zero)
+            {
+                byte[] bytes = ProtobufSchemes.SerializeProtoBuf(new MovementPacketFromClient(sumOfJoystickInput.x, sumOfJoystickInput.y, false));
+                connections.SendUDP(bytes, true, Globals.PacketCode.MoveFromClient);
+                sumOfJoystickInput = Vector2.zero;
+            }
             
         }
         catch (Exception ex)
