@@ -10,7 +10,7 @@ using System.Collections.Concurrent;
 public class UDPClient : UdpClient
 {
     public UDPClient(string address, int port) : base(address, port) { }
-    public static ConcurrentQueue<byte[]> ReceivedUDPPacket = new ConcurrentQueue<byte[]>();
+    public ConcurrentQueue<byte[]> ReceivedUDPPacket = new ConcurrentQueue<byte[]>();
 
     public void DisconnectAndStop()
     {       

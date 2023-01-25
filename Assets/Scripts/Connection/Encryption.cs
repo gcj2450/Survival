@@ -67,9 +67,9 @@ public class Encryption
 
         for (int i = 0; i < 100; i++)
         {
-            if (TCPClient.ReceivedTCPPacket.Count> 0)
+            if (connections.ReceivedTCPPacket.Count> 0)
             {                
-                bool isOK = TCPClient.ReceivedTCPPacket.TryDequeue(out result);
+                bool isOK = connections.ReceivedTCPPacket.TryDequeue(out result);
                 if (isOK)
                 {
                     return ProtobufSchemes.DeserializeProtoBuf<RSAExchange>(result);

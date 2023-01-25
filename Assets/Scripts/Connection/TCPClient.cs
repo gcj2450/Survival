@@ -9,7 +9,7 @@ using TcpClient = NetCoreServer.TcpClient;
 public class TCPClient : TcpClient
 {
     public TCPClient(string address, int port) : base(address, port) { }
-    public static ConcurrentQueue<byte[]> ReceivedTCPPacket = new ConcurrentQueue<byte[]>();
+    public ConcurrentQueue<byte[]> ReceivedTCPPacket = new ConcurrentQueue<byte[]>();
 
     public void DisconnectAndStop()
     {        

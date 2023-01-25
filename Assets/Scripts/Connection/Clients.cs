@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using UnityEngine;
 
 public class Clients
@@ -5,11 +6,16 @@ public class Clients
     public bool isTCPClientActive { get; private set; }
     public bool isUDPClientActive { get; private set; }
 
+    public ConcurrentQueue<byte[]> ReceivedTCPPacket;
+    public ConcurrentQueue<byte[]> ReceivedUDPPacket;
+
     private static Clients instance;
     private Clients() 
     {
         StartTCPClient();
         StartUDPClient();
+        ReceivedTCPPacket = tcpClient.ReceivedTCPPacket;
+        ReceivedUDPPacket = udpClient.ReceivedUDPPacket;
     }
     public static Clients GetInstance()
     {

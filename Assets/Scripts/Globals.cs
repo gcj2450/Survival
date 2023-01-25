@@ -10,6 +10,7 @@ public class Globals : MonoBehaviour
     public const string SERVER_IP = "192.168.0.108";
     public const int TCP_PORT = 3000;
     public const int UDP_PORT = 3001;
+    
     public const int TICKi = 50;
     public const float TICKf = 0.05f;
 

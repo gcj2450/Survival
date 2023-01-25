@@ -47,18 +47,18 @@ public class SceneTest1 : MonoBehaviour
             */
         }         
         
-        if (UDPClient.ReceivedUDPPacket.Count > 0)
+        if (connections.ReceivedUDPPacket.Count > 0)
         {            
             byte[] packet = Array.Empty<byte>();
 
-            if (UDPClient.ReceivedUDPPacket.TryDequeue(out packet))
+            if (connections.ReceivedUDPPacket.TryDequeue(out packet))
             {
                 if (packet[0] == (byte)Globals.PacketCode.MoveFromServer)
                 {
                     byte[] data = Encryption.TakeSomeToArrayFromNumber(packet, 1);
                     Encryption.Decode(ref data, Globals.RSASecretCode);
                     MovementPacketFromServer mover = ProtobufSchemes.DeserializeProtoBuf<MovementPacketFromServer>(data);
-                    obj.transform.position = new Vector3(mover.PositionX, 0, mover.PositionZ);
+                    obj.transform.position = new Vector3(mover.PositionX, mover.PositionY, mover.PositionZ);
                     obj.transform.eulerAngles = new Vector3(0, mover.RotationY, 0);
                 }
             }
