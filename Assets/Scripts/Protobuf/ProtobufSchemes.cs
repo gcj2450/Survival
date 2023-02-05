@@ -1,27 +1,44 @@
 using ProtoBuf;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class ProtobufSchemes : MonoBehaviour
+public class ProtobufSchemes
 {
     public static byte[] SerializeProtoBuf<T>(T data)
     {
-        using (var stream = new MemoryStream())
+        try
         {
-            Serializer.Serialize<T>(stream, data);
-            return stream.ToArray();
+            using (var stream = new MemoryStream())
+            {
+                Serializer.Serialize<T>(stream, data);
+                return stream.ToArray();
+            }
         }
+        catch (Exception ex)
+        {
+            Debug.Log(ex);
+        }
+
+        return Array.Empty<byte>();
     }
 
     public static T DeserializeProtoBuf<T>(byte[] data)
     {
-        using (var stream = new MemoryStream(data))
+        try
         {
-            return Serializer.Deserialize<T>(stream);
+            using (var stream = new MemoryStream(data))
+            {
+                return Serializer.Deserialize<T>(stream);
+            }
         }
+        catch (Exception ex)
+        {
+            Debug.Log(ex);
+        }
+
+        T result = default;
+        return result;
     }
 }
 
