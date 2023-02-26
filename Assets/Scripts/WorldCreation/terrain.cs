@@ -15,7 +15,7 @@ public class terrain : MonoBehaviour
 
         for (int i = 0; i < vertices.Length; i++)
         {
-            print(vertices[i].x.ToString("f2").Replace(',', '.') + "f=" + vertices[i].y.ToString("f2").Replace(',', '.') + "f=" + vertices[i].z.ToString("f2").Replace(',', '.') + "f");
+            //print(vertices[i].x.ToString("f2").Replace(',', '.') + "f=" + vertices[i].y.ToString("f2").Replace(',', '.') + "f=" + vertices[i].z.ToString("f2").Replace(',', '.') + "f");
             Instantiate(obj, vertices[i], Quaternion.identity);
         }
     }

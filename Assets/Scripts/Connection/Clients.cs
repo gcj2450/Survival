@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Concurrent;
 using UnityEngine;
 
@@ -26,7 +27,10 @@ public class Clients
         return instance;
     }
 
-    
+    public void GetTCPPacketInput(TCPIncomingPacketManager packetManager)
+    {
+        tcpClient.PacketProcessor = packetManager.ProcessPacket;
+    }
 
     private TCPClient tcpClient;
     private UDPClient udpClient;

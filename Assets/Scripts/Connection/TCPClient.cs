@@ -10,6 +10,7 @@ public class TCPClient : TcpClient
 {
     public TCPClient(string address, int port) : base(address, port) { }
     public ConcurrentQueue<byte[]> ReceivedTCPPacket = new ConcurrentQueue<byte[]>();
+    public Action<byte[]> PacketProcessor;
 
     public void DisconnectAndStop()
     {        
@@ -34,6 +35,7 @@ public class TCPClient : TcpClient
         //UnityEngine.Debug.Log(Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
         //SendAsync("OK!!!"); 
         ReceivedTCPPacket.Enqueue(buffer.AsSpan(0, (int)size).ToArray());
+        PacketProcessor?.Invoke(buffer.AsSpan(0, (int)size).ToArray());
     }
 
     protected override void OnError(SocketError error)

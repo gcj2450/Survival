@@ -6,8 +6,6 @@ using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
-using Mono.Cecil.Cil;
-using UnityEngine.Networking.Types;
 
 public class Encryption
 {
