@@ -23,6 +23,7 @@ public class Globals : MonoBehaviour
         MoveFromClient = 1, //joystick press data
         MoveFromServer = 2,
         GetClientUDPEndpoint = 3,
-        PlayerInitData = 4
+        MainPlayerData = 4,
+        CharacterData = 5
     }
 }
