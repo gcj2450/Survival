@@ -11,6 +11,7 @@ public class UDPClient : UdpClient
 {
     public UDPClient(string address, int port) : base(address, port) { }
     public ConcurrentQueue<byte[]> ReceivedUDPPacket = new ConcurrentQueue<byte[]>();
+    public Action<byte[]> PacketProcessor;
 
     public void DisconnectAndStop()
     {       
@@ -35,7 +36,7 @@ public class UDPClient : UdpClient
     {
         //UnityEngine.Debug.Log("Incoming: " + Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
         ReceivedUDPPacket.Enqueue(buffer.AsSpan(0, (int)size).ToArray());
-
+        PacketProcessor?.Invoke(buffer.AsSpan(0, (int)size).ToArray());
         ReceiveAsync();
     }
 

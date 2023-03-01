@@ -27,10 +27,17 @@ public class Clients
         return instance;
     }
 
+    /*
     public void GetTCPPacketInput(TCPIncomingPacketManager packetManager)
     {
-        tcpClient.PacketProcessor = packetManager.ProcessPacket;
+        tcpClient.PacketProcessor = packetManager.ProcessPacketTCP;
     }
+
+    public void GetUDPPacketInput(TCPIncomingPacketManager packetManager)
+    {
+        udpClient.PacketProcessor = packetManager.ProcessPacketUDP;
+    }
+    */
 
     private TCPClient tcpClient;
     private UDPClient udpClient;

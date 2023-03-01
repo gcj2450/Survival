@@ -35,7 +35,7 @@ public class TCPClient : TcpClient
         //UnityEngine.Debug.Log(Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
         //SendAsync("OK!!!"); 
         ReceivedTCPPacket.Enqueue(buffer.AsSpan(0, (int)size).ToArray());
-        PacketProcessor?.Invoke(buffer.AsSpan(0, (int)size).ToArray());
+        PacketProcessor?.Invoke(buffer.AsSpan(0, (int)size).ToArray());                
     }
 
     protected override void OnError(SocketError error)

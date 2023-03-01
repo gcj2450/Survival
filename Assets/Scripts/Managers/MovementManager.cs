@@ -6,13 +6,10 @@ using UnityEngine;
 
 public class MovementManager : MonoBehaviour
 {
-    public Vector3 position { get; private set; }
-    public Vector3 rotation { get; private set; }
+    [SerializeField] private Joystick joystick;
 
     //timer for send data
     private System.Timers.Timer _timer;
-
-    private Joystick joystick;
     private Clients connections;
 
     //cancel tick of SEND data
@@ -21,10 +18,18 @@ public class MovementManager : MonoBehaviour
 
     private Vector2 sumOfJoystickInput;
 
+    /*
     public void SetMovement(Joystick joystick, Clients connections)
     {
         this.joystick = joystick;
         this.connections = connections;
+        setTimerForMovement();
+    }
+    */
+
+    private void Start()
+    {
+        connections = Clients.GetInstance();
         setTimerForMovement();
     }
 
@@ -35,25 +40,6 @@ public class MovementManager : MonoBehaviour
         if (Mathf.Abs(joystick.Horizontal) > 0 || Mathf.Abs(joystick.Vertical) > 0)
         {
             sumOfJoystickInput += joystick.Direction;
-        }
-
-        if (connections.ReceivedUDPPacket.Count > 0)
-        {            
-            byte[] packet = Array.Empty<byte>();
-
-            if (connections.ReceivedUDPPacket.TryDequeue(out packet))
-            {
-                if (packet[0] == (byte)Globals.PacketCode.MoveFromServer)
-                {
-                    byte[] data = Encryption.TakeSomeToArrayFromNumber(packet, 1);
-                    Encryption.Decode(ref data, Globals.RSASecretCode);
-                    MovementPacketFromServer mover = ProtobufSchemes.DeserializeProtoBuf<MovementPacketFromServer>(data);
-                    //PlayerTransform.position = new Vector3(mover.PositionX, mover.PositionY, mover.PositionZ);
-                    //PlayerTransform.eulerAngles = new Vector3(0, mover.RotationY, 0);
-                    position = new Vector3(mover.PositionX, mover.PositionY, mover.PositionZ);
-                    rotation = new Vector3(0, mover.RotationY, 0);
-                }
-            }
         }
     }
 

@@ -47,6 +47,7 @@ public class Encryption
             connections.SendTCP(resultPacket, false, Globals.PacketCode.None);
             await Task.Delay(100);
             connections.SendUDP(new byte[] { 0 }, true, Globals.PacketCode.GetClientUDPEndpoint);
+            Globals.isConnectionEstablished = true;
         }
         catch (Exception)
         {

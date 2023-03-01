@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Globals : MonoBehaviour
 {
+    public static bool isConnectionEstablished = false;
     public static byte[] RSASecretCode;
     public static byte[] ClientNetworkID;
     public static int TicketID = 12345678;
@@ -23,7 +24,7 @@ public class Globals : MonoBehaviour
         MoveFromClient = 1, //joystick press data
         MoveFromServer = 2,
         GetClientUDPEndpoint = 3,
-        MainPlayerData = 4,
-        CharacterData = 5
+        InitialPlayerData = 4,
+        OperativePlayerData = 5
     }
 }
