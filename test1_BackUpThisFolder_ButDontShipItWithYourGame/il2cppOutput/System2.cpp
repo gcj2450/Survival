@@ -17107,6 +17107,14 @@ IL_002e:
 		return;
 	}
 }
+// System.Boolean System.Timers.Timer::get_Enabled()
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR bool Timer_get_Enabled_m082C8CCFB9C6936523EDE3E8C8DD010C22EDA032 (Timer_t10D85D58F4AC0CF80C625D0124B12098CE540A8B* __this, const RuntimeMethod* method) 
+{
+	{
+		bool L_0 = __this->___enabled_5;
+		return L_0;
+	}
+}
 // System.Void System.Timers.Timer::set_Enabled(System.Boolean)
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void Timer_set_Enabled_m96249C4F2CB558B6B65BBA006B55B4423830F38D (Timer_t10D85D58F4AC0CF80C625D0124B12098CE540A8B* __this, bool ___0_value, const RuntimeMethod* method) 
 {
