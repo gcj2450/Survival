@@ -1,5 +1,6 @@
 using DG.Tweening;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -24,6 +25,7 @@ public class terrain : MonoBehaviour
         vertices = mesh.vertices;
         markerT = marker.GetComponent<Transform>();
 
+        StartCoroutine(playShow());
         /*
         for (int x = 0; x < 20; x++)
         {
@@ -38,7 +40,7 @@ public class terrain : MonoBehaviour
             }
         }
         */
-
+        /*
         for (int i = 0; i < vertices.Length; i++)
         {
             if (vertices[i].x<20 && vertices[i].z < 20)
@@ -52,7 +54,7 @@ public class terrain : MonoBehaviour
             }
             
         }
-        
+        */
     }
 
     private Vector3 getCoords(Vector3 initPos)
@@ -156,60 +158,13 @@ public class terrain : MonoBehaviour
         return mesh.normals[results[minDist]];
     }
 
-    private void Update()
+    private IEnumerator playShow()
     {
-        /*
-        if (markerT.position != lastPos)
+        for (int i = 0; i < vertices.Length; i++)
         {
-            if (markers.Count > 0)
-            {
-                for (int i = 0; i < markers.Count; i++)
-                {
-                    Destroy(markers[i]);
-                }
-            }
-
-            markers.Clear();
-
-            
-            GameObject ttt = Instantiate(obj, getCoords(markerT.position), Quaternion.identity);
-            markers.Add(ttt);
-            
-            if (markers.Count > 0)
-            {
-                for (int i = 0; i < markers.Count; i++)
-                {
-                    Destroy(markers[i]);
-                }
-            }
-
-            markers.Clear();
-
-            for (int i = 0; i < vertices.Length; i++)
-            {
-                //print(vertices[i].x.ToString("f2").Replace(',', '.') + "f=" + vertices[i].y.ToString("f2").Replace(',', '.') + "f=" + vertices[i].z.ToString("f2").Replace(',', '.') + "f");
-                //Instantiate(obj, vertices[i], Quaternion.identity);
-                if ((vertices[i].x - markerT.position.x) >= -1f && (vertices[i].x - markerT.position.x) <= 1f &&
-                    (vertices[i].z - markerT.position.z) >= -1f && (vertices[i].z - markerT.position.z) <= 1f)
-                {
-                    float d = MathF.Atan2(mesh.tangents[i].x, mesh.tangents[i].y) * 180 / MathF.PI;
-                    //print(mesh.tangents[i] + " = " + (90 - d).ToString("f1"));
-                    print(mesh.normals[i]);
-                    //markers.Add(Instantiate(obj, vertices[i-1], Quaternion.identity));
-                    GameObject ttt = Instantiate(obj, vertices[i], Quaternion.identity);
-
-                    ttt.transform.LookAt(ttt.transform.position + mesh.normals[i]);
-                    //ttt.transform.LookAt(ttt.transform.position + mesh.normals[i]);
-
-                    ttt.transform.localEulerAngles = new Vector3(ttt.transform.localEulerAngles.x + 90, ttt.transform.localEulerAngles.y, ttt.transform.localEulerAngles.z);
-                    markers.Add(ttt);
-                    //markers.Add(Instantiate(obj, vertices[i + 1], Quaternion.identity));
-                }
-            }
-            
+            GameObject ttt = Instantiate(obj, vertices[i], Quaternion.identity);
+            yield return new WaitForSeconds(0.5f);
         }
-
-        lastPos = markerT.position;*/
-        
     }
+
 }
