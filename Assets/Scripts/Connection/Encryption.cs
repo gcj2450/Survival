@@ -22,7 +22,10 @@ public class Encryption
         if (connections.isTCPClientActive)
         {
             ExchangeData();
+            //return true;
         }
+
+        //return false;
     }
 
     private static async void ExchangeData()

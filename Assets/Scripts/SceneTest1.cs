@@ -22,7 +22,7 @@ public class SceneTest1 : MonoBehaviour
     void Start()
     {
         connections = Clients.GetInstance();
-        Encryption.PrepareSecureConnection();
+        //Encryption.PrepareSecureConnection();
         SetTimer();
     }
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 public class CharacterManagement : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class CharacterManagement : MonoBehaviour
     private Vector3 cameraShift;
     private Vector3 cameraAngle;
     private Dictionary<long,Characters> characters = new Dictionary<long, Characters> ();
+
+    private Action<Vector3> terrainUpdater;
+    public void SetTerrainUpdater(Action<Vector3> updater) => terrainUpdater = updater;
 
     private void Awake()
     {
@@ -36,6 +40,7 @@ public class CharacterManagement : MonoBehaviour
             {
                 mainPlayer = playerObject.transform;
                 cameraBody.position = mainPlayer.position + cameraShift;
+                terrainUpdater?.Invoke(mainPlayer.position);
             }
 
             characters.Add(objectID, charObject);
@@ -54,9 +59,12 @@ public class CharacterManagement : MonoBehaviour
             if (characters[objectID].transform == mainPlayer)
             {
                 cameraBody.DOMove(mainPlayer.position + cameraShift, 0.2f);
+                terrainUpdater?.Invoke(mainPlayer.position);
             }
         }
     }
+
+    
 
     /*
     private void Update()

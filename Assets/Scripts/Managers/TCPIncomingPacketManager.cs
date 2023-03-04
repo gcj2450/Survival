@@ -16,7 +16,7 @@ public class TCPIncomingPacketManager : MonoBehaviour
 
     private void Update()
     {       
-        if (characterManagement != null && connections!=null && Globals.isConnectionEstablished) 
+        if (characterManagement != null && connections!=null && Globals.isConnectionEstablished && Globals.isConnectionEstablished) 
         {
             byte[] data = Array.Empty<byte>();
 

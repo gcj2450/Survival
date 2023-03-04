@@ -13,7 +13,7 @@ public class test1 : MonoBehaviour
     void Start()
     {
         connections = Clients.GetInstance();
-        Encryption.PrepareSecureConnection();
+        //Encryption.PrepareSecureConnection();
 
         StartCoroutine(test());  
 

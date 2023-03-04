@@ -23,8 +23,7 @@ public class TerrTest2 : MonoBehaviour
     private void Start()
     {
         heights = Loader.LoadHeightDataFromFile("heights");
-        
-        
+                
         if (heights.Count > 0 )
         {
             for (int i = 0; i < heights.Count; i++)

@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform player;    
     [SerializeField] private CharacterManagement characterManagement;
     [SerializeField] private TCPIncomingPacketManager packetManager;
+    [SerializeField] private TerrainGenerator terrainGenerator;
 
     private Clients connections;
     
@@ -23,16 +24,27 @@ public class GameManager : MonoBehaviour
         Camera.main.aspect = 2;
         Application.targetFrameRate = 60;
 
+        StartCoroutine(startGame());
+    }
+
+    private IEnumerator startGame()
+    {
         //network and security init
         Globals.isConnectionEstablished = false;
         connections = Clients.GetInstance();
+
+        yield return new WaitForSeconds(0.2f);
+
         Encryption.PrepareSecureConnection();
-        //movementManager.SetMovement(joystick, connections);
+
+        yield return new WaitForSeconds(0.5f);
 
         //incoming TCP packets processor
         packetManager.SetTCPIncomingPacketManager(characterManagement);
-        //connections.GetTCPPacketInput(packetManager);
-        //connections.GetUDPPacketInput(packetManager);
+
+        //set terrain update constants
+        terrainGenerator.SetTerrainGenerator(20, 14, Vector3.zero);
+        characterManagement.SetTerrainUpdater(terrainGenerator.TerrainUpdater);
     }
 
 
