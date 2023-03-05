@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CharacterManagement characterManagement;
     [SerializeField] private TCPIncomingPacketManager packetManager;
     [SerializeField] private TerrainGenerator terrainGenerator;
+    [SerializeField] private CameraManager cameraManager;
 
     private Clients connections;
     
@@ -42,9 +43,14 @@ public class GameManager : MonoBehaviour
         //incoming TCP packets processor
         packetManager.SetTCPIncomingPacketManager(characterManagement);
 
-        //set terrain update constants
-        terrainGenerator.SetTerrainGenerator(20, 14, Vector3.zero);
+        //set terrain update constants        
         characterManagement.SetTerrainUpdater(terrainGenerator.TerrainUpdater);
+        
+        yield return new WaitForSeconds(0.3f);
+        
+        movementManager.SetMainPlayerCharacter(characterManagement.GetMainPlayerCharacter());
+        movementManager.IsPlayerCanMove = true;
+        cameraManager.SetCameraManager(characterManagement.GetMainPlayerCharacter());
     }
 
 

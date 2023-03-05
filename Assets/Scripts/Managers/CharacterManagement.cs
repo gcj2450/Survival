@@ -7,43 +7,49 @@ using System;
 public class CharacterManagement : MonoBehaviour
 {
     [SerializeField] private AssetManager assetManager;
-    [SerializeField] private Transform cameraBody;
-
+    
+    private Characters mainPlayerCharacter;
     private Transform mainPlayer;
-    private Vector3 cameraShift;
-    private Vector3 cameraAngle;
+    
     private Dictionary<long,Characters> characters = new Dictionary<long, Characters> ();
 
     private Action<Vector3> terrainUpdater;
+    private bool isFirstTerrainUpdate;
     public void SetTerrainUpdater(Action<Vector3> updater) => terrainUpdater = updater;
-
+    public Characters GetMainPlayerCharacter() => mainPlayerCharacter;
+    
     private void Awake()
     {
-        cameraShift = cameraBody.position;
-        cameraAngle = cameraBody.eulerAngles;
+        
     }
 
     public void InitPlayerData(long objectID, PlayerDataInitial data)
-    {        
+    {       
         if (!characters.ContainsKey(objectID))
         {                
             GameObject playerObject = Instantiate(
                 assetManager.GetGameObjectAsset(data.AppearanceId),
                 GameObject.Find("======Characters======").transform);
 
-            Characters charObject = playerObject.GetComponent<Characters>();
-            charObject.SetTransform(
+            Characters characterObject = playerObject.GetComponent<Characters>();
+            characterObject.SetTransform(
                 new Vector3(data.PositionX, data.PositionY, data.PositionZ), 
                 new Vector3(data.RotationX, data.RotationY, data.RotationZ));
             
             if (characters.Count == 0)
             {
+                mainPlayerCharacter = characterObject;
                 mainPlayer = playerObject.transform;
-                cameraBody.position = mainPlayer.position + cameraShift;
-                terrainUpdater?.Invoke(mainPlayer.position);
+                characterObject.IsItMainPlayer = true;
+
+
+                if (!isFirstTerrainUpdate)
+                {
+                    StartCoroutine(firstTerrainUpdate());
+                }
             }
 
-            characters.Add(objectID, charObject);
+            characters.Add(objectID, characterObject);
         }       
         
     }
@@ -52,27 +58,39 @@ public class CharacterManagement : MonoBehaviour
     {
         if (characters.ContainsKey(objectID))
         {
-            characters[objectID].UpdateTransform(
-                new Vector3(data.PositionX, data.PositionY, data.PositionZ), 
-                new Vector3(data.RotationX, data.RotationY, data.RotationZ));
-
             if (characters[objectID].transform == mainPlayer)
             {
-                cameraBody.DOMove(mainPlayer.position + cameraShift, 0.2f);
+                //cameraBody.DOMove(mainPlayer.position + cameraShift, 0.5f);
+                //cameraBody.position = mainPlayer.position + cameraShift;
+                //cameraNewPosition = mainPlayer.position + cameraShift;
                 terrainUpdater?.Invoke(mainPlayer.position);
+                                
+                characters[objectID].UpdateTransform(
+                new Vector3(data.PositionX, data.PositionY, data.PositionZ),
+                new Vector3(data.RotationX, data.RotationY, data.RotationZ));
+            }
+            else
+            {
+                characters[objectID].UpdateTransform(
+                new Vector3(data.PositionX, data.PositionY, data.PositionZ),
+                new Vector3(data.RotationX, data.RotationY, data.RotationZ));
             }
         }
     }
-
     
 
-    /*
-    private void Update()
+    private IEnumerator firstTerrainUpdate()
     {
-        if (mainPlayer != null)
+        for (float i = 0; i < 2; i+=0.1f)
         {
-            cameraBody.position = mainPlayer.position + cameraShift;
+            if (terrainUpdater != null)
+            {
+                terrainUpdater.Invoke(mainPlayer.position);
+                break;
+            }
+            yield return new WaitForSeconds(0.1f);
         }
+
+        isFirstTerrainUpdate = true;
     }
-    */
 }

@@ -15,8 +15,8 @@ public class Globals : MonoBehaviour
     public const int TICKi = 50;
     public const float TICKf = 0.05f;
 
-    public const int SCREEN_WIDTH = 1920;
-    public const int SCREEN_HEIGHT = 960;
+    public const int SCREEN_WIDTH = 1440;
+    public const int SCREEN_HEIGHT = 720;
 
     public enum PacketCode
     {

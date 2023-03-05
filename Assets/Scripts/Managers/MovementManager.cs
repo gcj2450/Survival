@@ -6,8 +6,14 @@ using UnityEngine;
 
 public class MovementManager : MonoBehaviour
 {
-    [SerializeField] private Joystick joystick;
+    public bool IsPlayerCanMove = false;
+    private Characters mainPlayerCharacter;
+    private Transform mainPlayerTransform;
+    private Vector3 playerPositionByPrediction = Vector3.zero;
+    private Vector3 playerRotationByPrediction = Vector3.zero;
 
+    [SerializeField] private Joystick joystick;
+   
     //timer for send data
     private System.Timers.Timer _timer;
     private Clients connections;
@@ -17,15 +23,7 @@ public class MovementManager : MonoBehaviour
     private CancellationToken token;
 
     private Vector2 sumOfJoystickInput;
-
-    /*
-    public void SetMovement(Joystick joystick, Clients connections)
-    {
-        this.joystick = joystick;
-        this.connections = connections;
-        setTimerForMovement();
-    }
-    */
+    private float updateTimer;
 
     private void Start()
     {
@@ -33,14 +31,30 @@ public class MovementManager : MonoBehaviour
         setTimerForMovement();
     }
 
+    public void SetMainPlayerCharacter(Characters character)
+    {
+        mainPlayerCharacter = character;
+        mainPlayerTransform = mainPlayerCharacter.GetCharacterTransform();
+        playerPositionByPrediction = mainPlayerTransform.position;
+        playerRotationByPrediction = mainPlayerTransform.eulerAngles;
+    }
+
     void Update()
     {
-        if (joystick == null || connections == null) { return; }
+        if (joystick == null || connections == null || !IsPlayerCanMove) { return; }
 
         if (Mathf.Abs(joystick.Horizontal) > 0 || Mathf.Abs(joystick.Vertical) > 0)
         {
             sumOfJoystickInput += joystick.Direction;
+
+            MovementPrediction(joystick.Horizontal, joystick.Vertical, mainPlayerTransform.position,
+            mainPlayerTransform.eulerAngles, out playerPositionByPrediction, out playerRotationByPrediction, 
+            Globals.TICKf / Time.deltaTime/10);
+
+            mainPlayerCharacter.UpdateTransformMainPlayerJoystick(playerPositionByPrediction, playerRotationByPrediction);
         }
+                
+        
     }
 
     private void setTimerForMovement()
@@ -90,5 +104,26 @@ public class MovementManager : MonoBehaviour
     private void OnApplicationQuit()
     {        
         if (_timer.Enabled) cancelTokenSource.Cancel();
+    }
+
+    private void MovementPrediction(float Horizontal, float Vertical, Vector3 currentPosition, Vector3 currentRotation, 
+        out Vector3 newPosition, out Vector3 newRotation, float speed)
+    {
+        newPosition = currentPosition;
+        newRotation = currentRotation;
+
+        const float Deg2Rad = (float)Math.PI / 180f;
+        const float speedKoeff = 1.5f;
+        float brutto_angle = MathF.Atan2(Horizontal, Vertical) * 180 / MathF.PI;
+
+        float new_position_x = currentPosition.x
+            + MathF.Sin(brutto_angle * Deg2Rad) / 10f * speed * speedKoeff;
+
+        float new_position_z = currentPosition.z
+            + MathF.Cos(brutto_angle * Deg2Rad) / 10f * speed * speedKoeff;
+
+
+        newRotation = new Vector3(currentRotation.x, brutto_angle, currentRotation.z);
+        newPosition = new Vector3(new_position_x, currentPosition.y, new_position_z);
     }
 }

@@ -5,9 +5,10 @@ using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class TerrainGenerator : MonoBehaviour
-{    
-    private int chunkTerrainWidth, chunkTerrainHeight;
-    private Vector3 startPoint;
+{
+    private readonly int chunkTerrainWidth = 20;
+    private readonly int chunkTerrainHeight = 14;
+    private Vector3 startPoint = new Vector3 (float.MaxValue, 0, float.MaxValue);
 
     private Vector3[] vertices;
     private Mesh mesh;
@@ -31,26 +32,16 @@ public class TerrainGenerator : MonoBehaviour
         }
     }
 
-    public void SetTerrainGenerator(int width, int height, Vector3 start)
+    
+    private void generateMesh()
     {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
-        
-        chunkTerrainWidth = width;
-        chunkTerrainHeight = height;
-        startPoint = new Vector3((int)start.x, start.y, (int)start.z);
-        generateMesh();
-    }
 
-    
-    private void generateMesh()
-    {        
         int xSize = chunkTerrainWidth * 3;
-        int zSize = chunkTerrainWidth * 3;
+        int zSize = chunkTerrainHeight * 3;
 
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
-        
-        
         
         Vector2[] uvs = new Vector2[vertices.Length];
         Vector4[] tangents = new Vector4[vertices.Length];
@@ -98,7 +89,7 @@ public class TerrainGenerator : MonoBehaviour
     }
 
     public void TerrainUpdater(Vector3 newPosition)
-    {
+    {        
         float deltaX = newPosition.x - startPoint.x;
         float deltaZ = newPosition.z - startPoint.z;
 
@@ -109,25 +100,56 @@ public class TerrainGenerator : MonoBehaviour
 
             if (deltaX > 0 && deltaX> chunkTerrainWidth / 2)
             {
-                newResult.x += chunkTerrainWidth;
+                if (deltaX < chunkTerrainWidth)
+                {
+                    newResult.x += chunkTerrainWidth;
+                }
+                else
+                {
+                    newResult.x = newPosition.x;
+                }
+                
             }
             else if(deltaX < 0 && deltaX < -chunkTerrainWidth / 2)
             {
-                newResult.x -= chunkTerrainWidth;
+                if (deltaX > -chunkTerrainWidth)
+                {
+                    newResult.x -= chunkTerrainWidth;
+                }
+                else
+                {
+                    newResult.x = newPosition.x;
+                }
+                
             }
 
             if (deltaZ > 0 && deltaZ > chunkTerrainHeight / 2)
             {
-                newResult.z += chunkTerrainHeight;
+                if (deltaZ < chunkTerrainHeight)
+                {
+                    newResult.z += chunkTerrainHeight;
+                }
+                else
+                {
+                    newResult.z = newPosition.z;
+                }
+                
             }
             else if (deltaZ < 0 && deltaZ < -chunkTerrainHeight / 2)
             {
-                newResult.z -= chunkTerrainHeight;
+                if (deltaZ > chunkTerrainHeight)
+                {
+                    newResult.z -= chunkTerrainHeight;
+                }
+                else
+                {
+                    newResult.z = newPosition.z;
+                }
+                
             }
 
-            startPoint = newResult;
+            startPoint = new Vector3((int)newResult.x, newResult.y, (int)newResult.z);
             generateMesh();
-
         }
     }
 }

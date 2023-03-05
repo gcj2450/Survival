@@ -38,7 +38,7 @@ public class TCPIncomingPacketManager : MonoBehaviour
             {
                 switch (data[0])
                 {
-                    case 2://get initial player data
+                    case 2://get movement data
                         byte[] cleanData = Encryption.TakeSomeToArrayFromNumber(data, 1);
                         Encryption.Decode(ref cleanData, Globals.RSASecretCode);
                         MovementPacketFromServer mover = ProtobufSchemes.DeserializeProtoBuf<MovementPacketFromServer>(cleanData);
