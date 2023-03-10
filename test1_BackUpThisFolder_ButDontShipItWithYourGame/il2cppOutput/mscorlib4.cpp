@@ -15997,6 +15997,11 @@ IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float MathF_Sin_m8F5C17ABE29270A1F44E45656863
 {
 	return sinf(___0_x);
 }
+// System.Single System.MathF::Sqrt(System.Single)
+IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR float MathF_Sqrt_mA8EF5D74DBDA39070ED6C5FF5E743BFD7431BB95 (float ___0_x, const RuntimeMethod* method) 
+{
+	return sqrtf(___0_x);
+}
 // System.Void System.MathF::.cctor()
 IL2CPP_EXTERN_C IL2CPP_METHOD_ATTR void MathF__cctor_m81D5E25547C074E30DD2EBEE098519871BC40347 (const RuntimeMethod* method) 
 {

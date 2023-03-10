@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class CameraManager : MonoBehaviour
     private Vector3 cameraShift;
     private Vector3 cameraAngle;
     private Vector3 cameraNewPosition;
+    private Vector3 cameraSpeed;
 
     private void Start()
     {
@@ -31,8 +33,7 @@ public class CameraManager : MonoBehaviour
     {
         if (mainPlayerCharacter == null) return;
 
-        //cameraBody.position = Vector3.SmoothDamp(
-        //    cameraBody.position, mainPlayer.position + cameraShift, ref cameraNewPosition, Globals.TICKf);
-        cameraBody.position = mainPlayer.position + cameraShift;
+        cameraBody.position = Vector3.SmoothDamp(
+                cameraBody.position, mainPlayer.position + cameraShift, ref cameraSpeed, 0.2f);      
     }
 }

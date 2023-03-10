@@ -7,10 +7,12 @@ using UnityEngine;
 public class MovementManager : MonoBehaviour
 {
     public bool IsPlayerCanMove = false;
+    private bool isUpdateData;
     private Characters mainPlayerCharacter;
     private Transform mainPlayerTransform;
     private Vector3 playerPositionByPrediction = Vector3.zero;
     private Vector3 playerRotationByPrediction = Vector3.zero;
+
 
     [SerializeField] private Joystick joystick;
    
@@ -23,6 +25,7 @@ public class MovementManager : MonoBehaviour
     private CancellationToken token;
 
     private Vector2 sumOfJoystickInput;
+    private Vector2 sumOfJoystickInputPrediction;
     private float updateTimer;
 
     private void Start()
@@ -39,22 +42,32 @@ public class MovementManager : MonoBehaviour
         playerRotationByPrediction = mainPlayerTransform.eulerAngles;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (joystick == null || connections == null || !IsPlayerCanMove) { return; }
 
         if (Mathf.Abs(joystick.Horizontal) > 0 || Mathf.Abs(joystick.Vertical) > 0)
         {
             sumOfJoystickInput += joystick.Direction;
-
+            /*
             MovementPrediction(joystick.Horizontal, joystick.Vertical, mainPlayerTransform.position,
-            mainPlayerTransform.eulerAngles, out playerPositionByPrediction, out playerRotationByPrediction, 
-            Globals.TICKf / Time.deltaTime/10);
-
-            mainPlayerCharacter.UpdateTransformMainPlayerJoystick(playerPositionByPrediction, playerRotationByPrediction);
+                    mainPlayerTransform.eulerAngles, out playerPositionByPrediction, out playerRotationByPrediction,
+                    1);
+            mainPlayerCharacter.UpdateTransform(playerPositionByPrediction, playerRotationByPrediction, -1);
+            */
         }
-                
-        
+
+        if (isUpdateData)
+        {
+            isUpdateData = false;
+
+            MovementPrediction(sumOfJoystickInputPrediction.x, sumOfJoystickInputPrediction.y, mainPlayerTransform.position,
+                    mainPlayerTransform.eulerAngles, out playerPositionByPrediction, out playerRotationByPrediction,
+                    1);
+            mainPlayerCharacter.UpdateTransform(playerPositionByPrediction, playerRotationByPrediction, -1);
+
+            sumOfJoystickInputPrediction = Vector3.zero;
+        }
     }
 
     private void setTimerForMovement()
@@ -89,6 +102,8 @@ public class MovementManager : MonoBehaviour
         {
             if (sumOfJoystickInput != Vector2.zero)
             {
+                isUpdateData = true;
+                sumOfJoystickInputPrediction = sumOfJoystickInput;
                 byte[] bytes = ProtobufSchemes.SerializeProtoBuf(new MovementPacketFromClient(sumOfJoystickInput.x, sumOfJoystickInput.y, false));
                 connections.SendUDP(bytes, true, Globals.PacketCode.MoveFromClient);
                 sumOfJoystickInput = Vector2.zero;
@@ -113,14 +128,17 @@ public class MovementManager : MonoBehaviour
         newRotation = currentRotation;
 
         const float Deg2Rad = (float)Math.PI / 180f;
-        const float speedKoeff = 1.5f;
+
+        float speedKoeff = MathF.Sqrt(Horizontal * Horizontal + Vertical * Vertical);
+        speedKoeff = speedKoeff <= 3 ? speedKoeff : 3;
+
         float brutto_angle = MathF.Atan2(Horizontal, Vertical) * 180 / MathF.PI;
 
         float new_position_x = currentPosition.x
-            + MathF.Sin(brutto_angle * Deg2Rad) / 10f * speed * speedKoeff;
+            + MathF.Sin(brutto_angle * Deg2Rad) / 10f * speed * speedKoeff * 0.75f;
 
         float new_position_z = currentPosition.z
-            + MathF.Cos(brutto_angle * Deg2Rad) / 10f * speed * speedKoeff;
+            + MathF.Cos(brutto_angle * Deg2Rad) / 10f * speed * speedKoeff * 0.75f;
 
 
         newRotation = new Vector3(currentRotation.x, brutto_angle, currentRotation.z);

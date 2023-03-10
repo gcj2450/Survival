@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 using UnityEngine.UI;
 
 
@@ -15,6 +15,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TCPIncomingPacketManager packetManager;
     [SerializeField] private TerrainGenerator terrainGenerator;
     [SerializeField] private CameraManager cameraManager;
+    [SerializeField] private TextMeshProUGUI textt;
+
+    public static string datat;
 
     private Clients connections;
     
@@ -43,11 +46,22 @@ public class GameManager : MonoBehaviour
         //incoming TCP packets processor
         packetManager.SetTCPIncomingPacketManager(characterManagement);
 
+        yield return new WaitForSeconds(0.3f);
+
         //set terrain update constants        
         characterManagement.SetTerrainUpdater(terrainGenerator.TerrainUpdater);
         
-        yield return new WaitForSeconds(0.3f);
         
+
+        for (int i = 0; i < 20; i++)
+        {
+            if (characterManagement != null && characterManagement.GetMainPlayerCharacter() != null)
+            {
+                break;
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
+
         movementManager.SetMainPlayerCharacter(characterManagement.GetMainPlayerCharacter());
         movementManager.IsPlayerCanMove = true;
         cameraManager.SetCameraManager(characterManagement.GetMainPlayerCharacter());
@@ -62,5 +76,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
+    private void Update()
+    {
+        textt.text = datat;
+    }
 }

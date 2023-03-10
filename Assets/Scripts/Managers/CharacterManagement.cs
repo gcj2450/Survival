@@ -65,15 +65,21 @@ public class CharacterManagement : MonoBehaviour
                 //cameraNewPosition = mainPlayer.position + cameraShift;
                 terrainUpdater?.Invoke(mainPlayer.position);
                                 
+                
+
                 characters[objectID].UpdateTransform(
                 new Vector3(data.PositionX, data.PositionY, data.PositionZ),
-                new Vector3(data.RotationX, data.RotationY, data.RotationZ));
+                new Vector3(data.RotationX, data.RotationY, data.RotationZ),
+                data.PacketOrder
+                );
             }
             else
             {
                 characters[objectID].UpdateTransform(
                 new Vector3(data.PositionX, data.PositionY, data.PositionZ),
-                new Vector3(data.RotationX, data.RotationY, data.RotationZ));
+                new Vector3(data.RotationX, data.RotationY, data.RotationZ),
+                data.PacketOrder
+                );
             }
         }
     }

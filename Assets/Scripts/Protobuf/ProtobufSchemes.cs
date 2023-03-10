@@ -84,7 +84,7 @@ public struct MovementPacketFromServer
 {
     public MovementPacketFromServer(uint id, long objectId, float positionX, float positionY, float positionZ, float rotationX, float rotationY, float rotationZ)
     {
-        PacketId = id;
+        PacketOrder = id;
         ObjectId = objectId;
         PositionX = positionX;
         PositionY = positionY;
@@ -95,7 +95,7 @@ public struct MovementPacketFromServer
     }
 
     [ProtoMember(1)]
-    public uint PacketId { get; set; }
+    public uint PacketOrder { get; set; }
     [ProtoMember(2)]
     public long ObjectId { get; set; }
     [ProtoMember(3)]
