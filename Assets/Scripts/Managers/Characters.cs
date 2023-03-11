@@ -2,6 +2,7 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
@@ -17,26 +18,31 @@ public class Characters : MonoBehaviour
     [SerializeField] private Animator _animator;
     private AnimatorManager characterAnimator;
     private long movementPacketOrder;
+
+    Vector3 older = Vector3.zero;
     
     private const float ROTATION_SPEED = 0.3f;
     private const float WAIT_EXCEED_LIMIT = 2f;
+    private const int INTERPOLATION_PACKET_LIMIT = 2;
+
+    private Vector3 finalPoint = Vector3.zero;
 
     private Vector3 speedVector = Vector3.zero;
     private Vector3 previousDelta = Vector3.zero;
     private Vector3 correctionForPosition = Vector3.zero;
 
     private int packetsInPrediction = 0;
+    private int limitPrediction;
 
     private Vector3 positionToMove = Vector3.zero;
     private Vector3 rotationToMove = Vector3.zero;
     private Vector3 previousPositionToMove = Vector3.zero;
     private Vector3 deltaPositionToMove = Vector3.zero;
-    private bool isAutoUpdate = true;
-    private float smoothKoeff = 0;
-
-    private Queue<Vector3> positions = new Queue<Vector3>();
-
+    
     private Dictionary<long, Vector3> packetsFromServer = new Dictionary<long, Vector3>();
+    private List<float> distanceDeltas = new List<float>();
+    private long currentPacketID;
+    private long oldPacketID;
 
     private Vector3 oldPosition = Vector3.zero;
     private float refreshTimer;
@@ -57,6 +63,8 @@ public class Characters : MonoBehaviour
     {   
         characterTransform.position = position;
         characterTransform.eulerAngles = rotation;
+        positionToMove = position;
+        rotationToMove = rotation;
     }
         
     public void UpdateTransform(Vector3 position, Vector3 rotation, long packetOrder)
@@ -65,8 +73,9 @@ public class Characters : MonoBehaviour
 
         if (packetOrder > 0)
         {
+            currentPacketID = packetOrder;
+            packetsFromServer.Add(packetOrder, position);      
             
-            packetsFromServer.Add(packetOrder, position);            
 
             if (packetOrder > movementPacketOrder)
             {
@@ -77,21 +86,20 @@ public class Characters : MonoBehaviour
 
                 if ((currentTimeStamp - lastUpdateTimeMark) / Globals.TICKi <= WAIT_EXCEED_LIMIT)
                 {
-                    
+                    setDistanceDeltas((currentTimeStamp - lastUpdateTimeMark));
+                    //print(Vector3.Distance(position, characterTransform.position) + " = "+ correctionForPosition);
 
-                    //SetNewUpdateData(position, rotation);
+                    if (Vector3.Distance(position, characterTransform.position) > 0.02f)
+                    {
+                        correctionForPosition = position - characterTransform.position;
+                        packetsInPrediction = 2;
+                        rotationToMove = rotation;
+                    }
+                    limitPrediction = 0;
+                    finalPoint = position;
                 }
-                else
-                {
-                    //StartCoroutine(correctTransform(previousDelta));
-                    //SetNewUpdateData(position, rotation, true);
-                }
-
-                if (Vector3.Distance(position, characterTransform.position) < 0.05f)
-                {
-                    correctionForPosition = characterTransform.position - position;
-                    packetsInPrediction = 2;
-                }
+             
+                
 
             }
 
@@ -112,24 +120,54 @@ public class Characters : MonoBehaviour
     public void SetNewUpdateData(Vector3 position, Vector3 rotation)
     {
         positionToMove = position;
-        positions.Enqueue(position);
         rotationToMove = rotation;
-        smoothKoeff = (position - characterTransform.position).magnitude / (Globals.TICKf/Time.fixedDeltaTime);
+
+        long timeDelta = updateControlTimer.ElapsedMilliseconds - lastUpdateTimeMark;
+        
+        if (timeDelta > Globals.TICKi
+            && timeDelta < 500
+            && refreshTimer <= 0
+            )
+        {            
+            //print("INTERPOLATED");
+            refreshTimer = Globals.TICKf;
+            //print((characterTransform.position - positionToMove).magnitude);
+            finalPoint = characterTransform.position + characterTransform.forward * interpolateDistance() * Globals.TICKi;
+            //print(interpolateDistance() * Globals.TICKi);
+        }
+
+        //finalPoint = position;
 
         //print((position - characterTransform.position).magnitude.ToString("f3") + " = " + Vector3.Distance(position, characterTransform.position).ToString("f3"));
 
         //characterTransform.rotation = Quaternion.Lerp(
         //   Quaternion.Euler(0, characterTransform.rotation.eulerAngles.y, 0),
-         //   Quaternion.Euler(rotation), ROTATION_SPEED);
-        
+        //   Quaternion.Euler(rotation), ROTATION_SPEED);
+
         //characterTransform.position = Vector3.SmoothDamp(
         //    characterTransform.position, position, ref speedVector, smoothKoeff);
-        
+
     }
 
  
     private void FixedUpdate()
     {
+        //print(interpolateDistance() + " !!!!!!!!!");
+
+        if ((finalPoint - characterTransform.position).magnitude > 0.03f)
+        {
+           
+            characterTransform.position = Vector3.SmoothDamp(
+                    characterTransform.position,
+                    finalPoint, 
+                    ref speedVector, 
+                    Time.deltaTime*4);         
+
+            //characterTransform.position = Vector3.Lerp(characterTransform.position, finalPoint, 0.3f);
+
+        }
+
+
         //print(Vector3.Distance(newPositionFromServer, characterTransform.position));
         //if (packetsInPrediction > 2) characterTransform.position += transform.forward * 0.1f;
 
@@ -146,17 +184,48 @@ public class Characters : MonoBehaviour
         }
         */
 
-        if (packetsInPrediction > 0)
+        /*
+        if (IsItMainPlayer)
         {
-            characterTransform.position = Vector3.SmoothDamp(
-                characterTransform.position, positionToMove + correctionForPosition/2, ref speedVector, Time.fixedDeltaTime);
-            packetsInPrediction--;
+            if (packetsInPrediction > 0)
+            {
+                characterTransform.position = Vector3.SmoothDamp(
+                    characterTransform.position, positionToMove + correctionForPosition / 2, ref speedVector, Time.fixedDeltaTime);
+                packetsInPrediction--;
+            }
+            else
+            {
+                characterTransform.position = Vector3.SmoothDamp(
+                    characterTransform.position, positionToMove, ref speedVector, Time.fixedDeltaTime);
+            }
+        }
+        */
+
+        
+        
+        if (refreshTimer > 0)
+        {
+            refreshTimer -= Time.fixedDeltaTime;
+        }
+
+        /*
+        if (refreshTimer > (Globals.TICKf * WAIT_EXCEED_LIMIT))
+        {
+            refreshTimer = 0;
+            
+            if (oldPacketID >= currentPacketID)
+            {
+                print(interpolateDistance());
+
+                characterTransform.position = Vector3.SmoothDamp(
+                    characterTransform.position, characterTransform.position + characterTransform.forward * interpolateDistance(), ref speedVector, Time.fixedDeltaTime);
+            }
         }
         else
         {
-            characterTransform.position = Vector3.SmoothDamp(
-                characterTransform.position, positionToMove, ref speedVector, Time.fixedDeltaTime);
+            refreshTimer += Time.deltaTime;
         }
+        */
 
         characterTransform.rotation = Quaternion.Lerp(
            Quaternion.Euler(0, characterTransform.rotation.eulerAngles.y, 0),
@@ -166,6 +235,7 @@ public class Characters : MonoBehaviour
         //    characterTransform.position, positionToMove, ref speedVector, Time.fixedDeltaTime);
         //characterTransform.position = Vector3.MoveTowards(characterTransform.position, positionToMove, smoothKoeff);
 
+        //print((characterTransform.position - oldPosition).magnitude);
         if ((characterTransform.position - oldPosition).magnitude > 0.01f)
         {
             characterAnimator.SetNewAnimation(PlayerAnimationStates.run);
@@ -173,22 +243,35 @@ public class Characters : MonoBehaviour
         else
         {
             characterAnimator.SetNewAnimation(PlayerAnimationStates.idle);
+            distanceDeltas.Clear();
         }
 
         oldPosition = characterTransform.position;
-
-    } 
+        oldPacketID = currentPacketID;
+    }    
     
-
-    private IEnumerator correctTransform(Vector3 delta)
+    private float interpolateDistance()
     {
-        
-        for (int i = 0; i < 3; i++)
-        {
-
-            characterTransform.position += transform.forward * 0.2f / 3;
-            yield return new WaitForSeconds(Time.deltaTime);
+        if (distanceDeltas.Count > 5)
+        {            
+            return distanceDeltas.Average();
         }
+        else return 0.003f;
+    }
+
+    private void setDistanceDeltas(float deltaTime)
+    {
+        if (packetsFromServer.Count>2)
+        {
+            float delta = (packetsFromServer[currentPacketID] - packetsFromServer[currentPacketID - 1]).magnitude / deltaTime;
+            distanceDeltas.Add(delta);
+        }
+
+        if (distanceDeltas.Count>10)
+        {
+            distanceDeltas.Remove(distanceDeltas[0]);
+        }
+        
     }
 
 }

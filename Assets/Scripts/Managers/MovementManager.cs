@@ -49,14 +49,15 @@ public class MovementManager : MonoBehaviour
         if (Mathf.Abs(joystick.Horizontal) > 0 || Mathf.Abs(joystick.Vertical) > 0)
         {
             sumOfJoystickInput += joystick.Direction;
-            /*
+            
             MovementPrediction(joystick.Horizontal, joystick.Vertical, mainPlayerTransform.position,
                     mainPlayerTransform.eulerAngles, out playerPositionByPrediction, out playerRotationByPrediction,
                     1);
             mainPlayerCharacter.UpdateTransform(playerPositionByPrediction, playerRotationByPrediction, -1);
-            */
+            
         }
 
+        /*
         if (isUpdateData)
         {
             isUpdateData = false;
@@ -68,6 +69,7 @@ public class MovementManager : MonoBehaviour
 
             sumOfJoystickInputPrediction = Vector3.zero;
         }
+        */
     }
 
     private void setTimerForMovement()
