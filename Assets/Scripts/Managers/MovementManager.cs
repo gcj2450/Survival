@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MovementManager : MonoBehaviour
 {
@@ -12,8 +14,7 @@ public class MovementManager : MonoBehaviour
     private Transform mainPlayerTransform;
     private Vector3 playerPositionByPrediction = Vector3.zero;
     private Vector3 playerRotationByPrediction = Vector3.zero;
-
-
+    
     [SerializeField] private Joystick joystick;
    
     //timer for send data
@@ -103,12 +104,12 @@ public class MovementManager : MonoBehaviour
         try
         {
             if (sumOfJoystickInput != Vector2.zero)
-            {
+            {                
                 isUpdateData = true;
                 sumOfJoystickInputPrediction = sumOfJoystickInput;
                 byte[] bytes = ProtobufSchemes.SerializeProtoBuf(new MovementPacketFromClient(sumOfJoystickInput.x, sumOfJoystickInput.y, false));
                 connections.SendUDP(bytes, true, Globals.PacketCode.MoveFromClient);
-                sumOfJoystickInput = Vector2.zero;
+                sumOfJoystickInput = Vector2.zero;                
             }
 
         }

@@ -78,43 +78,45 @@ public class Characters : MonoBehaviour
             
 
             if (packetOrder > movementPacketOrder)
-            {
-                
+            {   
                 if (testCube != null) testCube.transform.localScale = Vector3.one;                
                 movementPacketOrder = packetOrder;
-                //print(Vector3.Distance(characterTransform.position, position) + " = " + (position - characterTransform.position).magnitude);
+                rotationToMove = rotation;
 
+                setDistanceDeltas(currentTimeStamp - lastUpdateTimeMark);
+                finalPoint = position;
+
+                
                 if ((currentTimeStamp - lastUpdateTimeMark) / Globals.TICKi <= WAIT_EXCEED_LIMIT)
                 {
-                    setDistanceDeltas((currentTimeStamp - lastUpdateTimeMark));
-                    //print(Vector3.Distance(position, characterTransform.position) + " = "+ correctionForPosition);
-
-                    if (Vector3.Distance(position, characterTransform.position) > 0.02f)
-                    {
-                        correctionForPosition = position - characterTransform.position;
-                        packetsInPrediction = 2;
-                        rotationToMove = rotation;
-                    }
-                    limitPrediction = 0;
+                    setDistanceDeltas(currentTimeStamp - lastUpdateTimeMark);
                     finalPoint = position;
+                    //correctionForPosition = position;
+                    SetNewUpdateData(position, rotation);
                 }
-             
+                else
+                {
+                    finalPoint = characterTransform.position + characterTransform.forward * interpolateDistance() * Globals.TICKi;
+                    correctionForPosition = characterTransform.position + characterTransform.forward * interpolateDistance() * Globals.TICKi;
+                    SetNewUpdateData(correctionForPosition, rotation);
+                }
                 
-
             }
 
             if (testCube != null) testCube.position = position;
+            /*
             if (GameManager.datat != null && GameManager.datat.Length>600)
             {
                 GameManager.datat = "";
             }
             GameManager.datat += (currentTimeStamp - lastUpdateTimeMark).ToString() + " = " + packetOrder + " = " + (position - characterTransform.position).magnitude.ToString("f3") + "\n";
+            */
             lastUpdateTimeMark = currentTimeStamp;
         }
         else
-        {            
+        {
             SetNewUpdateData(position, rotation);
-        }        
+        }
     }
 
     public void SetNewUpdateData(Vector3 position, Vector3 rotation)
@@ -122,120 +124,54 @@ public class Characters : MonoBehaviour
         positionToMove = position;
         rotationToMove = rotation;
 
+        characterTransform.position = Vector3.SmoothDamp(
+                  characterTransform.position,
+                  position,
+                  ref speedVector,
+                  Time.fixedDeltaTime);
+
+        characterTransform.rotation = Quaternion.Lerp(
+           Quaternion.Euler(0, characterTransform.rotation.eulerAngles.y, 0),
+           Quaternion.Euler(rotationToMove), ROTATION_SPEED);
+
+        /*
         long timeDelta = updateControlTimer.ElapsedMilliseconds - lastUpdateTimeMark;
         
         if (timeDelta > Globals.TICKi
             && timeDelta < 500
             && refreshTimer <= 0
             )
-        {            
-            //print("INTERPOLATED");
-            refreshTimer = Globals.TICKf;
-            //print((characterTransform.position - positionToMove).magnitude);
+        {
+            refreshTimer = Globals.TICKf;         
             finalPoint = characterTransform.position + characterTransform.forward * interpolateDistance() * Globals.TICKi;
-            //print(interpolateDistance() * Globals.TICKi);
-        }
+        }  
+        */
 
-        //finalPoint = position;
-
-        //print((position - characterTransform.position).magnitude.ToString("f3") + " = " + Vector3.Distance(position, characterTransform.position).ToString("f3"));
-
-        //characterTransform.rotation = Quaternion.Lerp(
-        //   Quaternion.Euler(0, characterTransform.rotation.eulerAngles.y, 0),
-        //   Quaternion.Euler(rotation), ROTATION_SPEED);
-
-        //characterTransform.position = Vector3.SmoothDamp(
-        //    characterTransform.position, position, ref speedVector, smoothKoeff);
 
     }
 
  
     private void FixedUpdate()
-    {
-        //print(interpolateDistance() + " !!!!!!!!!");
-
-        if ((finalPoint - characterTransform.position).magnitude > 0.03f)
+    {   
+        /*
+        if ((finalPoint - characterTransform.position).magnitude > 0.01f)
         {
-           
             characterTransform.position = Vector3.SmoothDamp(
-                    characterTransform.position,
-                    finalPoint, 
-                    ref speedVector, 
-                    Time.deltaTime*4);         
-
-            //characterTransform.position = Vector3.Lerp(characterTransform.position, finalPoint, 0.3f);
-
+                  characterTransform.position,
+                  finalPoint, 
+                  ref speedVector, 
+                  Time.fixedDeltaTime / 2);
         }
 
-
-        //print(Vector3.Distance(newPositionFromServer, characterTransform.position));
-        //if (packetsInPrediction > 2) characterTransform.position += transform.forward * 0.1f;
-
-        /*
-        if (refreshTimer > Globals.TICKf*2)
-        {
-            refreshTimer = 0;
-            previousPositionToMove = positionToMove;
-            if (positions.Count > 0) positionToMove = positions.Dequeue();
-        }
-        else
-        {
-            refreshTimer += Time.deltaTime;
-        }
-        */
-
-        /*
-        if (IsItMainPlayer)
-        {
-            if (packetsInPrediction > 0)
-            {
-                characterTransform.position = Vector3.SmoothDamp(
-                    characterTransform.position, positionToMove + correctionForPosition / 2, ref speedVector, Time.fixedDeltaTime);
-                packetsInPrediction--;
-            }
-            else
-            {
-                characterTransform.position = Vector3.SmoothDamp(
-                    characterTransform.position, positionToMove, ref speedVector, Time.fixedDeltaTime);
-            }
-        }
-        */
-
-        
-        
         if (refreshTimer > 0)
         {
             refreshTimer -= Time.fixedDeltaTime;
         }
-
-        /*
-        if (refreshTimer > (Globals.TICKf * WAIT_EXCEED_LIMIT))
-        {
-            refreshTimer = 0;
-            
-            if (oldPacketID >= currentPacketID)
-            {
-                print(interpolateDistance());
-
-                characterTransform.position = Vector3.SmoothDamp(
-                    characterTransform.position, characterTransform.position + characterTransform.forward * interpolateDistance(), ref speedVector, Time.fixedDeltaTime);
-            }
-        }
-        else
-        {
-            refreshTimer += Time.deltaTime;
-        }
-        */
-
+     
         characterTransform.rotation = Quaternion.Lerp(
            Quaternion.Euler(0, characterTransform.rotation.eulerAngles.y, 0),
            Quaternion.Euler(rotationToMove), ROTATION_SPEED);
-
-        //characterTransform.position = Vector3.SmoothDamp(
-        //    characterTransform.position, positionToMove, ref speedVector, Time.fixedDeltaTime);
-        //characterTransform.position = Vector3.MoveTowards(characterTransform.position, positionToMove, smoothKoeff);
-
-        //print((characterTransform.position - oldPosition).magnitude);
+        */
         if ((characterTransform.position - oldPosition).magnitude > 0.01f)
         {
             characterAnimator.SetNewAnimation(PlayerAnimationStates.run);
