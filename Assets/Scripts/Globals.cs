@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class Globals : MonoBehaviour
@@ -8,7 +9,7 @@ public class Globals : MonoBehaviour
     public static byte[] RSASecretCode;
     public static byte[] ClientNetworkID;
     public static int TicketID = 12345678;
-    public const string SERVER_IP = "170.130.40.253";
+    public const string SERVER_IP = "170.130.40.253"; //192.168.0.108     usa - 170.130.40.253   31.172.66.150
     public const int TCP_PORT = 3000;
     public const int UDP_PORT = 3001;
     
@@ -17,6 +18,8 @@ public class Globals : MonoBehaviour
 
     public const int SCREEN_WIDTH = 1440;
     public const int SCREEN_HEIGHT = 720;
+
+    public static Stopwatch Timer = new Stopwatch();
 
     public enum PacketCode
     {

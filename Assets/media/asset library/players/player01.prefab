@@ -131,8 +131,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsItMainPlayer: 0
   characterObject: {fileID: 5365322323723623925}
-  characterTransform: {fileID: 6880254197685453956}
+  playerVisualPosition: {fileID: 6880254197685453956}
   _animator: {fileID: 5091328842565446523}
+  mydelta: {x: 0, y: 0, z: 0}
+  whatIsPredDelta: {x: 0, y: 0, z: 0}
   testCube: {fileID: 2571830048572860080}
 --- !u!1001 &2454114953215725272
 PrefabInstance:

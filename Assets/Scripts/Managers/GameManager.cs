@@ -16,10 +16,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TerrainGenerator terrainGenerator;
     [SerializeField] private CameraManager cameraManager;
     [SerializeField] private TextMeshProUGUI textt;
+    [SerializeField] private TextMeshProUGUI pingTextData;
+
 
     public static string datat;
 
     private Clients connections;
+    private PingMeter pingMeter;
     
     private void Awake()
     {
@@ -27,6 +30,10 @@ public class GameManager : MonoBehaviour
         Screen.SetResolution(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT, true);
         Camera.main.aspect = 2;
         Application.targetFrameRate = 60;
+
+        Globals.Timer.Start();
+        pingMeter = new PingMeter();
+        pingMeter.SetPingMeter(pingTextData, Globals.TICKi);
 
         StartCoroutine(startGame());
     }
@@ -51,9 +58,7 @@ public class GameManager : MonoBehaviour
         //set terrain update constants        
         characterManagement.SetTerrainUpdater(terrainGenerator.TerrainUpdater);
         
-        
-
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 50; i++)
         {
             if (characterManagement != null && characterManagement.GetMainPlayerCharacter() != null)
             {
@@ -64,12 +69,19 @@ public class GameManager : MonoBehaviour
 
         movementManager.SetMainPlayerCharacter(characterManagement.GetMainPlayerCharacter());
         movementManager.IsPlayerCanMove = true;
+
+        //PING
+        movementManager.SetPingMeterData(pingMeter);
+        characterManagement.SetPingMeter(pingMeter);
+
         cameraManager.SetCameraManager(characterManagement.GetMainPlayerCharacter());
     }
 
 
     private void OnApplicationQuit()
     {
+        Globals.Timer.Stop();
+
         if (connections != null)
         {
             connections.StopClients();

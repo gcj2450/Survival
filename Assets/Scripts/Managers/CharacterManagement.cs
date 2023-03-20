@@ -17,11 +17,13 @@ public class CharacterManagement : MonoBehaviour
     private bool isFirstTerrainUpdate;
     public void SetTerrainUpdater(Action<Vector3> updater) => terrainUpdater = updater;
     public Characters GetMainPlayerCharacter() => mainPlayerCharacter;
-    
-    private void Awake()
+    private PingMeter pingMeter;
+
+    public void SetPingMeter(PingMeter pingMeter)
     {
-        
+        this.pingMeter = pingMeter;
     }
+
 
     public void InitPlayerData(long objectID, PlayerDataInitial data)
     {       
@@ -58,14 +60,15 @@ public class CharacterManagement : MonoBehaviour
     {
         if (characters.ContainsKey(objectID))
         {
+            //print(data.PositionX + " = " + data.PositionZ);
+
             if (characters[objectID].transform == mainPlayer)
             {
+                pingMeter?.OutTimerData(Globals.Timer.ElapsedMilliseconds, (int)data.PacketOrder);
                 //cameraBody.DOMove(mainPlayer.position + cameraShift, 0.5f);
                 //cameraBody.position = mainPlayer.position + cameraShift;
                 //cameraNewPosition = mainPlayer.position + cameraShift;
                 terrainUpdater?.Invoke(mainPlayer.position);
-                                
-                
 
                 characters[objectID].UpdateTransform(
                 new Vector3(data.PositionX, data.PositionY, data.PositionZ),

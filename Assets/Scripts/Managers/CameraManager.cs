@@ -9,7 +9,7 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private Transform cameraBody;
 
     private Characters mainPlayerCharacter;
-    private Transform mainPlayer;
+    //private Transform mainPlayer;
 
     private Vector3 cameraShift;
     private Vector3 cameraAngle;
@@ -25,8 +25,8 @@ public class CameraManager : MonoBehaviour
     public void SetCameraManager(Characters character)
     {
         mainPlayerCharacter = character;
-        mainPlayer = mainPlayerCharacter.GetCharacterTransform();
-        cameraBody.position = mainPlayer.position + cameraShift;
+        
+        cameraBody.position = mainPlayerCharacter.GetCharacterTransform() + cameraShift;
     }
 
     private void Update()
@@ -34,6 +34,6 @@ public class CameraManager : MonoBehaviour
         if (mainPlayerCharacter == null) return;
 
         cameraBody.position = Vector3.SmoothDamp(
-                cameraBody.position, mainPlayer.position + cameraShift, ref cameraSpeed, 0.2f);      
+                cameraBody.position, mainPlayerCharacter.GetCharacterTransform() + cameraShift, ref cameraSpeed, 0.2f);      
     }
 }

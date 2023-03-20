@@ -65,14 +65,25 @@ public struct RSAExchange
 public struct MovementPacketFromClient
 {
     [ProtoMember(1)]
-    public float Horizontal { get; set; }
+    public int PacketId { get; set; }
     [ProtoMember(2)]
-    public float Vertical { get; set; }
+    public float Horizontal { get; set; }
     [ProtoMember(3)]
+    public float Vertical { get; set; }
+    [ProtoMember(4)]
     public bool isActionButtonOnePressed { get; set; }
 
-    public MovementPacketFromClient(float horizontal, float vertical, bool isOnePressed)
+    public MovementPacketFromClient(int packetID, float horizontal, float vertical, bool isOnePressed)
     {
+        PacketId = packetID;
+        Horizontal = horizontal;
+        Vertical = vertical;
+        isActionButtonOnePressed = isOnePressed;
+    }
+
+    public void Update(float horizontal, float vertical, bool isOnePressed)
+    {
+        PacketId++;
         Horizontal = horizontal;
         Vertical = vertical;
         isActionButtonOnePressed = isOnePressed;
