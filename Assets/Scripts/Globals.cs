@@ -9,12 +9,12 @@ public class Globals : MonoBehaviour
     public static byte[] RSASecretCode;
     public static byte[] ClientNetworkID;
     public static int TicketID = 12345678;
-    public const string SERVER_IP = "170.130.40.253"; //192.168.0.108     usa - 170.130.40.253   31.172.66.150
+    public const string SERVER_IP = "31.172.66.150"; //192.168.0.108     usa - 170.130.40.253   31.172.66.150
     public const int TCP_PORT = 3000;
     public const int UDP_PORT = 3001;
     
-    public const int TICKi = 50;
-    public const float TICKf = 0.05f;
+    public const int TICKi = 60;
+    public const float TICKf = 0.06f;
 
     public const int SCREEN_WIDTH = 1440;
     public const int SCREEN_HEIGHT = 720;

@@ -22,7 +22,7 @@ public class TerrTest2 : MonoBehaviour
 
     private void Start()
     {
-        heights = Loader.LoadHeightDataFromFile("heights");
+        heights = Loader.LoadHeightDataFromFile("heights.txt");
                 
         if (heights.Count > 0 )
         {
@@ -35,7 +35,6 @@ public class TerrTest2 : MonoBehaviour
             }
         }
         
-
         //screen
         Screen.SetResolution(Globals.SCREEN_WIDTH, Globals.SCREEN_HEIGHT, true);
         Camera.main.aspect = 2;

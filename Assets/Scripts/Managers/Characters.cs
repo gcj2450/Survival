@@ -103,11 +103,11 @@ public class Characters : MonoBehaviour
 
                 reconUpdateMark = currentTimeStamp;
                 //print("reconsiled");
-                if (smoothKoeff < 0.1f) smoothKoeff += 0.02f;
+                if (smoothKoeff < 0.1f) smoothKoeff += 0.02f; //if (smoothKoeff < 0.1f) smoothKoeff += 0.02f;
             }
-            else
+            else if (whatIsPredDelta.magnitude > 0)
             {
-                if (smoothKoeff > 0.05f) smoothKoeff -= 0.015f;
+                if (smoothKoeff > 0.05f) smoothKoeff -= 0.015f;  //if (smoothKoeff > 0.05f) smoothKoeff -= 0.015f;
             }
 
            
@@ -219,9 +219,17 @@ public class Characters : MonoBehaviour
         //playerVisualPosition.position = characterTransformPosition;
         //characterTransform.position = Vector3.Lerp(characterTransform.position,
         //              positionToMove, smoothKoeff);
-        
+        /*
+        if (whatIsPredDelta.magnitude <= 0.01f && smoothKoeff > 0)
+        {
+            smoothKoeff -= Time.deltaTime;
+        }
+        else if (whatIsPredDelta.magnitude > 0.01f && smoothKoeff < 0.05)
+        {
+            smoothKoeff += Time.deltaTime;
+        }*/
 
-        playerVisualPosition.position = Vector3.SmoothDamp(
+            playerVisualPosition.position = Vector3.SmoothDamp(
                 playerVisualPosition.position,
                 characterTransformPosition,
                 ref speedVector,

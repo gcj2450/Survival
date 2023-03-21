@@ -46,3 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   AssetPack:
   - {fileID: 11400000, guid: 2edab334874a00f4eb46a5dab6c6a4c9, type: 2}
+  st1: {fileID: 4900000, guid: 9283eb6b61167ec46af1929c1fdee963, type: 3}

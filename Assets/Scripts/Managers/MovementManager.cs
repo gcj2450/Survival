@@ -60,7 +60,7 @@ public class MovementManager : MonoBehaviour
         this.pingMeter = pingMeter;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (joystick == null || connections == null || !IsPlayerCanMove) { return; }
 

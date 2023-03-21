@@ -6,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
 public class TerrainGenerator : MonoBehaviour
 {
+    [SerializeField] private AssetManager assetManager;
+
     private readonly int chunkTerrainWidth = 20;
     private readonly int chunkTerrainHeight = 14;
     private Vector3 startPoint = new Vector3 (float.MaxValue, 0, float.MaxValue);
@@ -18,7 +20,9 @@ public class TerrainGenerator : MonoBehaviour
 
     private void Awake()
     {
-        heights = Loader.LoadHeightDataFromFile("heights");
+        //heights = Loader.LoadHeightDataFromFile("heights.txt");
+        heights = Loader.LoadHeightDataFromFile(assetManager.st1);
+
 
         if (heights.Count > 0)
         {

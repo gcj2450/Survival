@@ -140,6 +140,7 @@ Library: D:\NONandroid\Survival\Temp\StagingArea\tempburstlibs\armeabi-v7a\lib_b
 --compilation-defines=VFX_HAS_UI
 --compilation-defines=VFX_HAS_PHYSICS
 --compilation-defines=VFX_HAS_AUDIO
+--compilation-defines=ENABLE_ASYNC_ASSETBUNDLE_UWR
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=D:\NONandroid\Survival\Temp\Burst
 --output=D:\NONandroid\Survival\Temp\StagingArea\tempburstlibs\armeabi-v7a\lib_burst_generated

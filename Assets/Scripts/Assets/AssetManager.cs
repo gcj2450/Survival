@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class AssetManager : MonoBehaviour
 {
     public AssetLink[] AssetPack;
+    public TextAsset st1;
+    
 
     public GameObject GetGameObjectAsset(ushort id)
     {
