@@ -1,5 +1,6 @@
 using ProtoBuf;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -158,4 +159,34 @@ public struct PlayerDataInitial
     public float RotationY { get; set; }
     [ProtoMember(9)]
     public float RotationZ { get; set; }
+}
+
+[ProtoContract]
+public struct ListOfMovementPacketsFromServer
+{
+    public ListOfMovementPacketsFromServer(int i)
+    {
+        ListOfPackets = new Dictionary<long, MovementPacketFromServer>();
+    }
+
+    public void AddOrUpdate(MovementPacketFromServer packet)
+    {
+        if (!ListOfPackets.ContainsKey(packet.ObjectId))
+        {
+            ListOfPackets.Add(packet.ObjectId, packet);
+        }
+        else
+        {
+            ListOfPackets[packet.ObjectId] = packet;
+        }
+    }
+
+    public void Clear()
+    {
+        ListOfPackets.Clear();
+    }
+
+
+    [ProtoMember(1)]
+    public Dictionary<long, MovementPacketFromServer> ListOfPackets;
 }

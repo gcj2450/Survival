@@ -40,6 +40,7 @@ public class CharacterManagement : MonoBehaviour
             
             if (characters.Count == 0)
             {
+                print("main is #" + data.ObjectId);
                 mainPlayerCharacter = characterObject;
                 mainPlayer = playerObject.transform;
                 characterObject.IsItMainPlayer = true;
@@ -64,13 +65,10 @@ public class CharacterManagement : MonoBehaviour
 
             if (characters[objectID].transform == mainPlayer)
             {
-                pingMeter?.OutTimerData(Globals.Timer.ElapsedMilliseconds, (int)data.PacketOrder);
-                //cameraBody.DOMove(mainPlayer.position + cameraShift, 0.5f);
-                //cameraBody.position = mainPlayer.position + cameraShift;
-                //cameraNewPosition = mainPlayer.position + cameraShift;
+                pingMeter?.OutTimerData(Globals.Timer.ElapsedMilliseconds, (int)data.PacketOrder);             
                 terrainUpdater?.Invoke(mainPlayer.position);
 
-                characters[objectID].UpdateTransform(
+                characters[objectID].UpdateTransformForMainPlayer(
                 new Vector3(data.PositionX, data.PositionY, data.PositionZ),
                 new Vector3(data.RotationX, data.RotationY, data.RotationZ),
                 data.PacketOrder
@@ -78,15 +76,78 @@ public class CharacterManagement : MonoBehaviour
             }
             else
             {
-                characters[objectID].UpdateTransform(
+                characters[objectID].UpdateTransformForNonMain(
                 new Vector3(data.PositionX, data.PositionY, data.PositionZ),
-                new Vector3(data.RotationX, data.RotationY, data.RotationZ),
-                data.PacketOrder
+                new Vector3(data.RotationX, data.RotationY, data.RotationZ)
                 );
             }
         }
+        else
+        {
+            print(data.ObjectId + " = " + data.PacketOrder);
+
+            GameObject playerObject = Instantiate(
+                assetManager.GetGameObjectAsset(1),
+                GameObject.Find("======Characters======").transform);
+
+            Characters characterObject = playerObject.GetComponent<Characters>();
+            characterObject.SetTransform(
+                new Vector3(data.PositionX, data.PositionY, data.PositionZ),
+                new Vector3(data.RotationX, data.RotationY, data.RotationZ));
+
+            
+            characters.Add(objectID, characterObject);
+        }
     }
-    
+
+    public void UpdateMovementData(ListOfMovementPacketsFromServer data)
+    {        
+        foreach (var item in data.ListOfPackets.Keys)
+        {
+            if (characters.ContainsKey(item))
+            {
+                //print(data.PositionX + " = " + data.PositionZ);
+
+                if (characters[item].transform == mainPlayer)
+                {
+                    pingMeter?.OutTimerData(Globals.Timer.ElapsedMilliseconds, (int)data.ListOfPackets[item].PacketOrder);                  
+                    terrainUpdater?.Invoke(mainPlayer.position);
+
+                    characters[item].UpdateTransformForMainPlayer(
+                        new Vector3(data.ListOfPackets[item].PositionX, data.ListOfPackets[item].PositionY, data.ListOfPackets[item].PositionZ),
+                        new Vector3(data.ListOfPackets[item].RotationX, data.ListOfPackets[item].RotationY, data.ListOfPackets[item].RotationZ),
+                        data.ListOfPackets[item].PacketOrder
+                    );
+                }
+                else
+                {
+                    characters[item].UpdateTransformForNonMain(
+                        new Vector3(data.ListOfPackets[item].PositionX, data.ListOfPackets[item].PositionY, data.ListOfPackets[item].PositionZ),
+                        new Vector3(data.ListOfPackets[item].RotationX, data.ListOfPackets[item].RotationY, data.ListOfPackets[item].RotationZ)
+                    );
+                }
+            }
+            else
+            {
+                print(item + " = " + data.ListOfPackets[item].PacketOrder);
+
+                GameObject playerObject = Instantiate(
+                    assetManager.GetGameObjectAsset(1),
+                    GameObject.Find("======Characters======").transform);
+
+                Characters characterObject = playerObject.GetComponent<Characters>();
+                characterObject.SetTransform(
+                    new Vector3(data.ListOfPackets[item].PositionX, data.ListOfPackets[item].PositionY, data.ListOfPackets[item].PositionZ),
+                    new Vector3(data.ListOfPackets[item].RotationX, data.ListOfPackets[item].RotationY, data.ListOfPackets[item].RotationZ));
+
+
+                characters.Add(item, characterObject);
+            }
+        }
+
+        
+    }
+
 
     private IEnumerator firstTerrainUpdate()
     {

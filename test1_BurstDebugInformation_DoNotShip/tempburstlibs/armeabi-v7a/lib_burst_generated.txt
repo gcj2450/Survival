@@ -134,13 +134,13 @@ Library: D:\NONandroid\Survival\Temp\StagingArea\tempburstlibs\armeabi-v7a\lib_b
 --compilation-defines=MODULE_PHYSICS_EXISTS
 --compilation-defines=MODULE_PHYSICS_2D_EXISTS
 --compilation-defines=MODULE_PARTICLE_SYSTEM_EXISTS
+--compilation-defines=ENABLE_ASYNC_ASSETBUNDLE_UWR
 --compilation-defines=TIMELINE_FRAMEACCURATE
 --compilation-defines=VFX_HAS_TIMELINE
 --compilation-defines=VFX_HAS_TERRAINMODULE
 --compilation-defines=VFX_HAS_UI
 --compilation-defines=VFX_HAS_PHYSICS
 --compilation-defines=VFX_HAS_AUDIO
---compilation-defines=ENABLE_ASYNC_ASSETBUNDLE_UWR
 --generate-link-xml=Temp\burst.link.xml
 --temp-folder=D:\NONandroid\Survival\Temp\Burst
 --output=D:\NONandroid\Survival\Temp\StagingArea\tempburstlibs\armeabi-v7a\lib_burst_generated

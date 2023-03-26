@@ -49,10 +49,6 @@ public class MovementManager : MonoBehaviour
     {
         mainPlayerCharacter = character; mainPlayerCharacter.GetCharacterTransform();
         playerPositionByPrediction = mainPlayerCharacter.GetCharacterTransform();
-        //playerRotationByPrediction = mainPlayerTransform.eulerAngles;
-
-        //testPosition = mainPlayerCharacter.GetCharacterTransform();
-        //fromPosition = mainPlayerCharacter.GetCharacterTransform();
     }
 
     public void SetPingMeterData(PingMeter pingMeter)
@@ -60,7 +56,7 @@ public class MovementManager : MonoBehaviour
         this.pingMeter = pingMeter;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (joystick == null || connections == null || !IsPlayerCanMove) { return; }
 
@@ -68,7 +64,6 @@ public class MovementManager : MonoBehaviour
         {
             if (sumOfJoystickInput == Vector2.zero)
             {
-                //fromPosition = mainPlayerCharacter.GetCharacterTransform();
                 fromPositionAgregate = Vector3.zero;
             }
                 
@@ -82,7 +77,7 @@ public class MovementManager : MonoBehaviour
             //TODEL
             fromPositionAgregate += playerPositionByPrediction;
 
-            mainPlayerCharacter.UpdateTransform(mainPlayerCharacter.GetCharacterTransform() + playerPositionByPrediction, playerRotationByPrediction, -1);
+            mainPlayerCharacter.UpdateTransformForMainPlayer(mainPlayerCharacter.GetCharacterTransform() + playerPositionByPrediction, playerRotationByPrediction, -1);
             
         }
         else
@@ -92,19 +87,6 @@ public class MovementManager : MonoBehaviour
 
         mainPlayerCharacter.whatIsPredDelta = fromPositionAgregate;
 
-        /*
-        if (isUpdateData)
-        {
-            isUpdateData = false;
-
-            MovementPrediction(sumOfJoystickInputPrediction.x, sumOfJoystickInputPrediction.y, mainPlayerTransform.position,
-                    mainPlayerTransform.eulerAngles, out playerPositionByPrediction, out playerRotationByPrediction,
-                    1);
-            mainPlayerCharacter.UpdateTransform(playerPositionByPrediction, playerRotationByPrediction, -1);
-
-            sumOfJoystickInputPrediction = Vector3.zero;
-        }
-        */
     }
 
     private void setTimerForMovement()

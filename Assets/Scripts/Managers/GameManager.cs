@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CameraManager cameraManager;
     [SerializeField] private TextMeshProUGUI textt;
     [SerializeField] private TextMeshProUGUI pingTextData;
+    [SerializeField] private TextMeshProUGUI speedText;
 
 
     public static string datat;
@@ -90,6 +91,6 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        textt.text = datat;
+        speedText.text = datat;
     }
 }
