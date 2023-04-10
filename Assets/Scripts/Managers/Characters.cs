@@ -9,7 +9,25 @@ using UnityEngine;
 public class Characters : MonoBehaviour
 {
     public Vector3 GetCharacterTransform() => characterTransformPosition;
-    public bool IsItMainPlayer;
+    public bool isItMainPlayer;
+    public bool IsItMainPlayer
+    {
+        get => isItMainPlayer;
+
+        set
+        {
+            if (value)
+            {
+                refreshMoveAnimationLimit = 0;
+            }
+            else
+            {
+                refreshMoveAnimationLimit = Globals.TICKf * 2;
+            }
+
+            isItMainPlayer = value;
+        }
+    }
 
     [SerializeField] private GameObject characterObject;
     private Vector3 characterTransformPosition;
@@ -26,19 +44,17 @@ public class Characters : MonoBehaviour
     //public Vector3 MainPlayerPosition = Vector3.zero;
 
     private const float ROTATION_SPEED = 0.5f;
-    private const float WAIT_EXCEED_LIMIT = 2f;
+    private const float WAIT_EXCEED_LIMIT = 1.5f;
     private const int INTERPOLATION_PACKET_LIMIT = 2;
 
     private Vector3 speedVector = Vector3.zero;
-    private Vector3 correctionForPosition = Vector3.zero;
+    private float previousPositionMagnitude;
+
+    private Vector3 previousPosition = Vector3.zero;
+    private Vector3 previousRotation = Vector3.zero;
+
     private Vector3 positionToMove = Vector3.zero;
     private Vector3 rotationToMove = Vector3.zero;
-    private Vector3 previousPositionToMove = Vector3.zero;
-    private Vector3 deltaPositionToMove = Vector3.zero;
-    private Vector3 currentNewPosition = Vector3.zero;
-
-    private Vector3 oldPos = Vector3.zero;
-
     private int correctionCount = 0;
         
     public Vector3 mydelta = Vector3.zero;
@@ -47,13 +63,8 @@ public class Characters : MonoBehaviour
     public Dictionary<int, Vector3> planned = new Dictionary<int, Vector3>();
     private List<Vector3> positions = new List<Vector3>();
     private Dictionary<long, Vector3> packetsFromServer = new Dictionary<long, Vector3>();
-    
-    private List<float> distanceDeltas = new List<float>();
-    private float distanceDeltasAverage;
-    private readonly float standartDistanceDeltasAverage = 0.3f;
-
+  
     private long currentPacketID;
-    private long oldPacketID;
 
     private Vector3 oldPosition = Vector3.zero;
     private float refreshTimer;
@@ -63,38 +74,71 @@ public class Characters : MonoBehaviour
 
     [SerializeField] private Transform testCube;
 
+    //TO DEL
+    private int unique;
+    private float timer;
+    private float refreshMoveAnimationLimit = 0;
+    private bool isStop = true;
+
     private void Start()
     {        
         characterAnimator = new AnimatorManager();
         characterAnimator.SetAnimator(_animator);
         //blueforServer_pool = new ObjectPooling(500, blueforServer);
+        unique = UnityEngine.Random.Range(1000, 100000);
     }
 
     public void SetTransform(Vector3 position, Vector3 rotation)
     {
+        print(position);
         playerVisualPosition.position = position;
         playerVisualPosition.eulerAngles = rotation;
         positionToMove = position;
         rotationToMove = rotation;
         //MainPlayerPosition = position;
         characterTransformPosition = position;
-        positions.Add(position);
+        oldPosition = position;
+        positions.Add(position);        
     }
 
     public void UpdateTransformForNonMain(Vector3 position, Vector3 rotation)
     {
+
+
+        long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;
+        lastUpdateTimeMark = currentTimeStamp;
+
+        if ((position == Vector3.zero && rotation.y == 0) || previousPosition == position)
+        {            
+            isStop = true;            
+            return;
+        }
+                
+        isStop = false;
+
         characterTransformPosition = position;
         rotationToMove = rotation;
+
+        previousPosition = position;
+
+
     }
 
 
     public void UpdateTransformForMainPlayer(Vector3 position, Vector3 rotation, long packetOrder)
     {
-        long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;
-        
+        long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;        
 
         if (packetOrder > 0)
-        {
+        {         
+            if (position == Vector3.zero && rotation.y == 0)
+            {
+                isStop = true;
+                return;
+            }
+
+            
+            isStop = false;
             if (testCube != null) testCube.transform.localScale = Vector3.one;
 
             currentPacketID = packetOrder;
@@ -138,6 +182,7 @@ public class Characters : MonoBehaviour
 
             if (testCube != null) testCube.position = position;       
             lastUpdateTimeMark = currentTimeStamp;
+            previousPosition = characterTransformPosition;
         }
         else
         {
@@ -146,140 +191,71 @@ public class Characters : MonoBehaviour
     }
 
 
-    public void SetNewUpdateDataFromPrediction(Vector3 position, Vector3 rotation)
+    private void SetNewUpdateDataFromPrediction(Vector3 position, Vector3 rotation)
     {
         long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;
 
-        if ((currentTimeStamp - reconUpdateMark) > 20)
-        {
+        //if ((currentTimeStamp - reconUpdateMark) > 20)
+        //{
             characterTransformPosition = position;
             //if (smoothKoeff > 0.02f) smoothKoeff -= Time.deltaTime;
             //positions.Add(characterTransformPosition);
             //rotationToMove = rotation;
-        }
+        //}
         
     }
 
 
     private void Update()
-    {
+    {       
+        if (!IsItMainPlayer && !isStop)
+        {
+            long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;
+
+            if ((currentTimeStamp - lastUpdateTimeMark) > 15)
+            {
+                characterTransformPosition += transform.forward * 0.1f;
+                //lastUpdateTimeMark = currentTimeStamp;
+            }
+        }
+
+        //if (timer > refreshMoveAnimationLimit)
+        //{
+            timer = 0;
+            float positionMagnitude = (characterTransformPosition - oldPosition).magnitude;
+
+            if (positionMagnitude > 0.01f)
+            {
+                characterAnimator.SetNewAnimation(PlayerAnimationStates.run);
+            }
+            else
+            {
+                characterAnimator.SetNewAnimation(PlayerAnimationStates.idle);
+            }
+
+        
+            oldPosition = characterTransformPosition;
+        //}
+        //else
+        //{
+        //    timer += Time.deltaTime;
+        //}
+
         smoothKoeff = 0.1f;
 
-        /*
-        float dist = Vector3.Distance(playerVisualPosition.position, characterTransformPosition);
-
-        if (whatIsPredDelta.magnitude > 0.05f)
-        {
-            if (smoothKoeff <= 0.1f)
-            {
-                smoothKoeff += Time.deltaTime;
-            }
-            else if (smoothKoeff > 0.1f)
-                {
-                    smoothKoeff -= Time.deltaTime;
-                }
-        }
-        else
-        {
-            smoothKoeff = Time.deltaTime;
-        }*/
-
-
-        //playerVisualPosition.position = characterTransformPosition;
-        //characterTransform.position = Vector3.Lerp(characterTransform.position,
-        //              positionToMove, smoothKoeff);
-        /*
-        if (whatIsPredDelta.magnitude <= 0.01f && smoothKoeff > 0)
-        {
-            smoothKoeff -= Time.deltaTime;
-        }
-        else if (whatIsPredDelta.magnitude > 0.01f && smoothKoeff < 0.05)
-        {
-            smoothKoeff += Time.deltaTime;
-        }*/
-
-        //updateArchiveDistanceDeltas(Vector3.Distance(playerVisualPosition.position, characterTransformPosition));
-
-
-        //if (dist > 0.3f) print("dist: " + dist);
-
-        //currentNewPosition = characterTransformPosition;
-
-        /*
-        if (dist >= (0.3f * 1.4f) && whatIsPredDelta.magnitude > 0.05f)
-        {
-
-            //if (smoothKoeff > 0.03) smoothKoeff -= Time.deltaTime;
-
-            currentNewPosition = Vector3.Lerp(playerVisualPosition.position, characterTransformPosition, (0.3f * 1.4f / 0.3f));
-
-            
-        }
-        else if (dist < (0.3f * 0.6f) && whatIsPredDelta.magnitude > 0.05f)
-        {
-            //if (smoothKoeff < 1.5f) smoothKoeff += Time.deltaTime;
-            currentNewPosition = Vector3.Lerp(playerVisualPosition.position, characterTransformPosition, (0.3f * 0.7f / 0.3f));
-        }
-*/
-
-        //print("koeff: " + smoothKoeff);
-        //print("distance: " + Vector3.Distance(playerVisualPosition.position, characterTransformPosition) + " aver: " + distanceDeltasAverage);
-
-            playerVisualPosition.position = Vector3.SmoothDamp(
-                playerVisualPosition.position,
-                characterTransformPosition,                
-                ref speedVector,
-                smoothKoeff);
+        playerVisualPosition.position = Vector3.SmoothDamp(
+            playerVisualPosition.position,
+            characterTransformPosition,                
+            ref speedVector,
+            smoothKoeff);
 
         
 
-        //print(smoothKoeff);
-        //smoothKoeff = 0.01f;
-
-
-        /*
-        if (correctionCount>0)
-        {
-            //characterTransform.position = Vector3.SmoothDamp(
-            //        characterTransform.position,
-            //        positionToMove + correctionForPosition / (Globals.TICKf/Time.deltaTime),
-            //        ref speedVector,
-            //        Time.deltaTime);
-
-            characterTransform.position = Vector3.Lerp(characterTransform.position,
-                      positionToMove, smoothKoeff);
-
-
-
-            correctionCount--;
-        }
-        else
-        {
-            //characterTransform.position = Vector3.SmoothDamp(
-            //        characterTransform.position,
-            //        positionToMove,
-            //        ref speedVector,
-            //        Time.deltaTime);
-
-            characterTransform.position = Vector3.Lerp(characterTransform.position,
-                      positionToMove, smoothKoeff);
-        }
-*/
-
-        //characterTransform.position = Vector3.Lerp(characterTransform.position,
-        //              positionToMove, smoothKoeff);
-
-        /*
-        characterTransform.position = Vector3.MoveTowards(characterTransform.position, positionToMove, Vector3.Distance(characterTransform.position, positionToMove) / 2);
-        */
         playerVisualPosition.rotation = Quaternion.Lerp(
             Quaternion.Euler(0, playerVisualPosition.rotation.eulerAngles.y, 0),
             Quaternion.Euler(rotationToMove), ROTATION_SPEED);
 
-        
-        //characterTransform.position = Vector3.MoveTowards(characterTransform.position, positionToMove, smoothKoeff);
-        //print(dist);
-
+     
         if (refreshTimer > 0.3f)
         {
             refreshTimer = 0;
@@ -290,35 +266,11 @@ public class Characters : MonoBehaviour
             refreshTimer += Time.deltaTime;
         }
 
-        if ((characterTransformPosition - oldPosition).magnitude > 0.01f)
-        {
-            
-            characterAnimator.SetNewAnimation(PlayerAnimationStates.run);
-        }
-        else
-        {
-            characterAnimator.SetNewAnimation(PlayerAnimationStates.idle);            
-        }
+        //print(unique + ": " + (characterTransformPosition - oldPosition).magnitude);
 
-        oldPosition = characterTransformPosition;
-        previousPositionToMove = playerVisualPosition.position;
-        oldPacketID = currentPacketID;
-    }
-
-    private void updateArchiveDistanceDeltas(float value)
-    {
-        if (value < 0.1f) return;
-
-        if (distanceDeltas.Count > 5) distanceDeltasAverage = distanceDeltas.Average();
-        if (value > (standartDistanceDeltasAverage * 0.8f) && value < (standartDistanceDeltasAverage * 1.2f))
-        {
-            distanceDeltas.Add(value);
-        }            
         
-        if (distanceDeltas.Count > 15)
-        {
-            distanceDeltas.Remove(distanceDeltas[0]);
-        }
+
+        
     }
    
 }

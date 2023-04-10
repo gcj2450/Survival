@@ -34805,8 +34805,8 @@ struct CharacterManagement_t9B9982AB1206D5EE3FD22990ED9317009740F22A  : public M
 // Characters
 struct Characters_t196CC29DD3E712B67443EA5DDB3CBDEE81645C0A  : public MonoBehaviour_t532A11E69716D348D8AA7F854AFCBFCB8AD17F71
 {
-	// System.Boolean Characters::IsItMainPlayer
-	bool ___IsItMainPlayer_4;
+	// System.Boolean Characters::isItMainPlayer
+	bool ___isItMainPlayer_4;
 	// UnityEngine.GameObject Characters::characterObject
 	GameObject_t76FEDD663AB33C991A9C9A23129337651094216F* ___characterObject_5;
 	// UnityEngine.Vector3 Characters::characterTransformPosition
@@ -34825,54 +34825,50 @@ struct Characters_t196CC29DD3E712B67443EA5DDB3CBDEE81645C0A  : public MonoBehavi
 	int64_t ___movementPacketOrder_12;
 	// UnityEngine.Vector3 Characters::speedVector
 	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___speedVector_16;
-	// UnityEngine.Vector3 Characters::correctionForPosition
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___correctionForPosition_17;
+	// System.Single Characters::previousPositionMagnitude
+	float ___previousPositionMagnitude_17;
+	// UnityEngine.Vector3 Characters::previousPosition
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___previousPosition_18;
+	// UnityEngine.Vector3 Characters::previousRotation
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___previousRotation_19;
 	// UnityEngine.Vector3 Characters::positionToMove
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___positionToMove_18;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___positionToMove_20;
 	// UnityEngine.Vector3 Characters::rotationToMove
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___rotationToMove_19;
-	// UnityEngine.Vector3 Characters::previousPositionToMove
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___previousPositionToMove_20;
-	// UnityEngine.Vector3 Characters::deltaPositionToMove
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___deltaPositionToMove_21;
-	// UnityEngine.Vector3 Characters::currentNewPosition
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___currentNewPosition_22;
-	// UnityEngine.Vector3 Characters::oldPos
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___oldPos_23;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___rotationToMove_21;
 	// System.Int32 Characters::correctionCount
-	int32_t ___correctionCount_24;
+	int32_t ___correctionCount_22;
 	// UnityEngine.Vector3 Characters::mydelta
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___mydelta_25;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___mydelta_23;
 	// UnityEngine.Vector3 Characters::whatIsPredDelta
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___whatIsPredDelta_26;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___whatIsPredDelta_24;
 	// System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.Vector3> Characters::planned
-	Dictionary_2_t419A958E6A3BEBD3C1EFC8A29C08B445103CDE0C* ___planned_27;
+	Dictionary_2_t419A958E6A3BEBD3C1EFC8A29C08B445103CDE0C* ___planned_25;
 	// System.Collections.Generic.List`1<UnityEngine.Vector3> Characters::positions
-	List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* ___positions_28;
+	List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* ___positions_26;
 	// System.Collections.Generic.Dictionary`2<System.Int64,UnityEngine.Vector3> Characters::packetsFromServer
-	Dictionary_2_tFF67F6D90EFA90DE5807607D56A5AB320DEEA211* ___packetsFromServer_29;
-	// System.Collections.Generic.List`1<System.Single> Characters::distanceDeltas
-	List_1_t0D1C46FD8DDDE974D93CA4F3474EEC05AF950918* ___distanceDeltas_30;
-	// System.Single Characters::distanceDeltasAverage
-	float ___distanceDeltasAverage_31;
-	// System.Single Characters::standartDistanceDeltasAverage
-	float ___standartDistanceDeltasAverage_32;
+	Dictionary_2_tFF67F6D90EFA90DE5807607D56A5AB320DEEA211* ___packetsFromServer_27;
 	// System.Int64 Characters::currentPacketID
-	int64_t ___currentPacketID_33;
-	// System.Int64 Characters::oldPacketID
-	int64_t ___oldPacketID_34;
+	int64_t ___currentPacketID_28;
 	// UnityEngine.Vector3 Characters::oldPosition
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___oldPosition_35;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___oldPosition_29;
 	// System.Single Characters::refreshTimer
-	float ___refreshTimer_36;
+	float ___refreshTimer_30;
 	// System.Single Characters::smoothKoeff
-	float ___smoothKoeff_37;
+	float ___smoothKoeff_31;
 	// System.Int64 Characters::lastUpdateTimeMark
-	int64_t ___lastUpdateTimeMark_38;
+	int64_t ___lastUpdateTimeMark_32;
 	// System.Int64 Characters::reconUpdateMark
-	int64_t ___reconUpdateMark_39;
+	int64_t ___reconUpdateMark_33;
 	// UnityEngine.Transform Characters::testCube
-	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___testCube_40;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___testCube_34;
+	// System.Int32 Characters::unique
+	int32_t ___unique_35;
+	// System.Single Characters::timer
+	float ___timer_36;
+	// System.Single Characters::refreshMoveAnimationLimit
+	float ___refreshMoveAnimationLimit_37;
+	// System.Boolean Characters::isStop
+	bool ___isStop_38;
 };
 
 // ChatController

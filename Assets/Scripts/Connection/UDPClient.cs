@@ -35,6 +35,9 @@ public class UDPClient : UdpClient
     protected override void OnReceived(EndPoint endpoint, byte[] buffer, long offset, long size)
     {
         //UnityEngine.Debug.Log("Incoming: " + Encoding.UTF8.GetString(buffer, (int)offset, (int)size));
+
+        //Debug.Log("size: " + size);
+
         ReceivedUDPPacket.Enqueue(buffer.AsSpan(0, (int)size).ToArray());
         PacketProcessor?.Invoke(buffer.AsSpan(0, (int)size).ToArray());
         ReceiveAsync();

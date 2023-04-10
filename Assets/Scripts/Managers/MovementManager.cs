@@ -65,8 +65,7 @@ public class MovementManager : MonoBehaviour
             if (sumOfJoystickInput == Vector2.zero)
             {
                 fromPositionAgregate = Vector3.zero;
-            }
-                
+            }   
 
             sumOfJoystickInput += joystick.Direction;
 
@@ -127,7 +126,7 @@ public class MovementManager : MonoBehaviour
 
                     isUpdateData = true;
                     sumOfJoystickInputPrediction = sumOfJoystickInput;
-                    movementPacketFromClient.Update(999, 0, false);
+                    movementPacketFromClient.Update(999.9f, 0, false);
                     pingMeter?.InTimerData(Globals.Timer.ElapsedMilliseconds, movementPacketFromClient.PacketId);
                     byte[] bytes = ProtobufSchemes.SerializeProtoBuf(movementPacketFromClient);
                     connections.SendUDP(bytes, true, Globals.PacketCode.MoveFromClient);
