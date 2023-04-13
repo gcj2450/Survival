@@ -6,25 +6,43 @@ public class InteractionManager : MonoBehaviour
 {
     [SerializeField] private Transform pointer;
 
+    public bool IsCanMove(bool result) => isCanMove = result;
+    private bool isCanMove;
+
     private Camera mainCamera;
     private Ray ray;
     private RaycastHit hit;
+    private Clients connections;
 
     // Start is called before the first frame update
     void Start()
     {
         mainCamera = Camera.main;
+        connections = Clients.GetInstance();
     }
 
     // Update is called once per frame
     void Update()
     {
-        ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+        if (!isCanMove) return;
 
-        if (Physics.Raycast(ray, out hit, 30))
+        if (Input.GetMouseButtonDown(0))
         {
-            if (hit.collider.gameObject.CompareTag("Ground")) pointer.position = hit.point;
+            ray = mainCamera.ScreenPointToRay(Input.mousePosition);
 
+            if (Physics.Raycast(ray, out hit, 30))
+            {
+                if (hit.collider.gameObject.CompareTag("Ground"))
+                {
+                    pointer.position = hit.point;
+                    byte[] bytes = ProtobufSchemes.SerializeProtoBuf(new PlayerPointFromClient(hit.point));
+                    connections.SendTCP(bytes, true, Globals.PacketCode.PointFromClient);
+                }
+            }
         }
+
+        
     }
+
+    
 }

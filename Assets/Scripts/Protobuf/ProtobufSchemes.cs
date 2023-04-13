@@ -190,3 +190,28 @@ public struct ListOfMovementPacketsFromServer
     [ProtoMember(1)]
     public Dictionary<long, MovementPacketFromServer> ListOfPackets;
 }
+
+[ProtoContract]
+public struct PlayerPointFromClient
+{    
+    public PlayerPointFromClient(float positionX, float positionY, float positionZ)
+    {
+        PositionX = positionX;
+        PositionY = positionY;
+        PositionZ = positionZ;
+    }
+
+    public PlayerPointFromClient(Vector3 point)
+    {
+        PositionX = point.x;
+        PositionY = point.y;
+        PositionZ = point.z;
+    }
+
+    [ProtoMember(1)]
+    public float PositionX { get; set; }
+    [ProtoMember(2)]
+    public float PositionY { get; set; }
+    [ProtoMember(3)]
+    public float PositionZ { get; set; }
+}

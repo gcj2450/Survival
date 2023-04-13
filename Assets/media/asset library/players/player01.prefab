@@ -162,7 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69cac4d8b9863c64388419cdfc1bf749, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsItMainPlayer: 0
+  isItMainPlayer: 0
   characterObject: {fileID: 5365322323723623925}
   playerVisualPosition: {fileID: 6880254197685453956}
   _animator: {fileID: 5091328842565446523}

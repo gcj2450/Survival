@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,9 +9,7 @@ using UnityEngine.UI;
 [DefaultExecutionOrder(-1)]
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] private Joystick joystick;
-    [SerializeField] private MovementManager movementManager;
-    [SerializeField] private Transform player;    
+    [SerializeField] private InteractionManager interactionManager;
     [SerializeField] private CharacterManagement characterManagement;
     [SerializeField] private TCPIncomingPacketManager packetManager;
     [SerializeField] private TerrainGenerator terrainGenerator;
@@ -31,10 +30,10 @@ public class GameManager : MonoBehaviour
         Camera.main.aspect = 2;
         Application.targetFrameRate = 60;
 
+        if (Globals.Timer.IsRunning) Globals.Timer.Stop();
+        Globals.Timer = new Stopwatch();
         Globals.Timer.Start();
-        pingMeter = new PingMeter();
-        pingMeter.SetPingMeter(pingTextData, Globals.TICKi);
-
+      
         StartCoroutine(startGame());
     }
 
@@ -67,13 +66,7 @@ public class GameManager : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
-        movementManager.SetMainPlayerCharacter(characterManagement.GetMainPlayerCharacter());
-        movementManager.IsPlayerCanMove = true;
-
-        //PING
-        movementManager.SetPingMeterData(pingMeter);
-        characterManagement.SetPingMeter(pingMeter);
-
+        interactionManager.IsCanMove(true);
         cameraManager.SetCameraManager(characterManagement.GetMainPlayerCharacter());
     }
 

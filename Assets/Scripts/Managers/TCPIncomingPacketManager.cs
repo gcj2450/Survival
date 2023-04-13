@@ -67,7 +67,7 @@ public class TCPIncomingPacketManager : MonoBehaviour
                             characterManagement.UpdateMovementData(mover.ObjectId, mover);
                             break;
 
-                        case 6://get movement data                            
+                        case 6://get movement data in array
                             byte[] cleanData1 = Encryption.TakeSomeToArrayFromNumber(dataUDP, 1);
                             Encryption.Decode(ref cleanData1, Globals.RSASecretCode);
                             ListOfMovementPacketsFromServer movers = ProtobufSchemes.DeserializeProtoBuf<ListOfMovementPacketsFromServer>(cleanData1);

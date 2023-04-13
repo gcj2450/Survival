@@ -335,7 +335,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2929252283123773939, guid: aaa2c939c0359ac4dbce3f49e8b90252, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2929252285020697096, guid: aaa2c939c0359ac4dbce3f49e8b90252, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1512,9 +1512,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc29d90a5f8cb3f4a9b5290080d6e86f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  joystick: {fileID: 288749371}
-  movementManager: {fileID: 1704152367}
-  player: {fileID: 778502039}
+  interactionManager: {fileID: 1704152372}
   characterManagement: {fileID: 1704152370}
   packetManager: {fileID: 1704152369}
   terrainGenerator: {fileID: 4330807964516617097}

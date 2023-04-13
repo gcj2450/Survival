@@ -85,7 +85,7 @@ public class Characters : MonoBehaviour
     {        
         characterAnimator = new AnimatorManager();
         characterAnimator.SetAnimator(_animator);
-        //blueforServer_pool = new ObjectPooling(500, blueforServer);
+        //blueforServer_pool = new ObjectPooling(1000, blueforServer);
         unique = UnityEngine.Random.Range(1000, 100000);
     }
 
@@ -110,6 +110,16 @@ public class Characters : MonoBehaviour
         deltaUpdateMark = currentTimeStamp - lastUpdateTimeMark;
         lastUpdateTimeMark = currentTimeStamp;
 
+        characterTransformPosition = position;
+        rotationToMove = rotation;
+
+        deltaToNonMain = position - previousPosition;
+
+        previousPosition = position;
+        previousRotation = rotation;
+
+
+        /*
         if ((position == Vector3.zero && rotation.y == 0) || previousPosition == position)
         {            
             isStop = true;            
@@ -126,7 +136,7 @@ public class Characters : MonoBehaviour
         rotationToMove = rotation;     
 
         previousPosition = position;
-
+        */
 
     }
 
@@ -136,66 +146,59 @@ public class Characters : MonoBehaviour
         long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;
         deltaUpdateMark = currentTimeStamp - lastUpdateTimeMark;
 
-        if (packetOrder > 0)
-        {         
-            if (position == Vector3.zero && rotation.y == 0)
-            {
-                isStop = true;
-                return;
-            }
+        //if (packetOrder > 0)
+        //{
 
-            
-            isStop = false;
-            if (testCube != null) testCube.transform.localScale = Vector3.one;
+        //GameObject g = blueforServer_pool.GetPrefab();
+        //g.SetActive(true);
+        //g.transform.position = position;
 
-            currentPacketID = packetOrder;
-            if (!packetsFromServer.ContainsKey(packetOrder)) packetsFromServer.Add(packetOrder, position);
-            rotationToMove = rotation;
+        characterTransformPosition = position;
+        rotationToMove = rotation;
 
-            float difference = (position - (characterTransformPosition - whatIsPredDelta)).magnitude;
+        //print((position - previousPosition).magnitude);
 
-            if (difference > 0.01f)
-            {
-                /*
-                Vector3 difference = position - (characterTransform.position - whatIsPredDelta);
-                if (difference.magnitude > 0.01f)
-                {
-                    characterTransform.position = position - whatIsPredDelta;
-                }*/
+        previousPosition = position;
+        previousRotation = rotation;
 
-                smoothKoeff = 0.1f;
-
-                characterTransformPosition = position + whatIsPredDelta;
-                //playerVisualPosition.position = position + whatIsPredDelta;
-                //characterTransformPosition = position;
-                positions.Add(characterTransformPosition);
-
-                reconUpdateMark = currentTimeStamp;
-                //print("reconsiled");
-                //if (smoothKoeff < 0.08f) smoothKoeff += 0.01f; //if (smoothKoeff < 0.1f) smoothKoeff += 0.02f;
-                //if (smoothKoeff < 0.08f) smoothKoeff += Time.deltaTime;
-                //if (difference > 0.1f) print("correction: diff - " + difference + " and delta - " + whatIsPredDelta.magnitude +" = koeff "+ smoothKoeff);
-            }            
-            else if (whatIsPredDelta.magnitude > 0)
-            {
-                //if (smoothKoeff > 0.02f) smoothKoeff -= 0.01f;  //if (smoothKoeff > 0.05f) smoothKoeff -= 0.015f;
-                //if (smoothKoeff > 0.02f) smoothKoeff -= Time.deltaTime;
-                //print("OK: " + smoothKoeff);
-            }
-
-            if (packetOrder > movementPacketOrder)
-            {
-                                                                         
-            }
-
-            if (testCube != null) testCube.position = position;       
-            lastUpdateTimeMark = currentTimeStamp;
-            previousPosition = characterTransformPosition;
-        }
-        else
+        //print(packetOrder + " = " + position + " = " + rotation);
+        /*
+        if (position == Vector3.zero && rotation.y == 0)
         {
-            SetNewUpdateDataFromPrediction(position, rotation);
+            isStop = true;
+            return;
         }
+
+
+        isStop = false;
+        if (testCube != null) testCube.transform.localScale = Vector3.one;
+
+        currentPacketID = packetOrder;
+        if (!packetsFromServer.ContainsKey(packetOrder)) packetsFromServer.Add(packetOrder, position);
+        rotationToMove = rotation;
+
+        float difference = (position - (characterTransformPosition - whatIsPredDelta)).magnitude;
+
+        if (difference > 0.01f)
+        {
+
+            smoothKoeff = 0.1f;
+
+            characterTransformPosition = position + whatIsPredDelta;          
+            positions.Add(characterTransformPosition);
+
+            reconUpdateMark = currentTimeStamp;
+
+        }            
+        */
+
+        if (testCube != null) testCube.position = position;       
+            lastUpdateTimeMark = currentTimeStamp;
+        //}
+        //else
+        //{
+        //    SetNewUpdateDataFromPrediction(position, rotation);
+        //}
     }
 
 
@@ -216,37 +219,11 @@ public class Characters : MonoBehaviour
 
     private void Update()
     {
-        /*
-        if (!IsItMainPlayer && !isStop)
+        
+        if (timer > 0.1f)
         {
-            deltaToNonMain = transform.forward * (0.2f / (Globals.TICKf / Time.deltaTime - 1));
-
-            characterTransformPosition += deltaToNonMain;
-
-        }
-        else if (!IsItMainPlayer && isStop)
-        {
-            deltaToNonMain = Vector3.zero;
-        }
-        */
-
-            /*
-            if (!IsItMainPlayer && !isStop)
-            {
-
-
-                long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;
-
-                if ((currentTimeStamp - lastUpdateTimeMark) > 15)
-                {
-                    characterTransformPosition += transform.forward * (0.2f / (Globals.TICKf/Time.deltaTime - 1));
-                }
-
-            }*/
-
-            //if (timer > refreshMoveAnimationLimit)
-            //{
             timer = 0;
+
             float positionMagnitude = (characterTransformPosition - oldPosition).magnitude;
 
             if (positionMagnitude > 0.01f)
@@ -258,24 +235,24 @@ public class Characters : MonoBehaviour
                 characterAnimator.SetNewAnimation(PlayerAnimationStates.idle);
             }
 
-        
             oldPosition = characterTransformPosition;
-        //}
-        //else
-        //{
-        //    timer += Time.deltaTime;
-        //}
+        }
+        else
+        {
+            timer += Time.deltaTime;
+        }
+              
+        smoothKoeff = 0.2f;
 
-        smoothKoeff = 0.1f;
-
-
-
-
+        
         playerVisualPosition.position = Vector3.SmoothDamp(
             playerVisualPosition.position,
             characterTransformPosition,
             ref speedVector,
             smoothKoeff);
+
+      
+        //playerVisualPosition.position = characterTransformPosition;
 
             playerVisualPosition.rotation = Quaternion.Lerp(
                 Quaternion.Euler(0, playerVisualPosition.rotation.eulerAngles.y, 0),

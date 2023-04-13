@@ -8,7 +8,7 @@ public class Globals : MonoBehaviour
     public static bool isConnectionEstablished = false;
     public static byte[] RSASecretCode;
     public static byte[] ClientNetworkID;
-    public static int TicketID = 12345679;
+    public static int TicketID = 12345678;
     public const string SERVER_IP = "192.168.0.108"; //192.168.0.108     usa - 170.130.40.253   31.172.66.150
     public const int TCP_PORT = 3000;
     public const int UDP_PORT = 3001;
@@ -29,7 +29,8 @@ public class Globals : MonoBehaviour
         GetClientUDPEndpoint = 3,
         InitialPlayerData = 4,
         OperativePlayerData = 5,
-        ListOfMovementFromServer = 6
+        ListOfMovementFromServer = 6,
+        PointFromClient = 7
 
     }
 }
