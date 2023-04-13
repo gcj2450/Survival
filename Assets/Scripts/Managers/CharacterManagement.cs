@@ -101,7 +101,9 @@ public class CharacterManagement : MonoBehaviour
     }
 
     public void UpdateMovementData(ListOfMovementPacketsFromServer data)
-    {        
+    {
+        if (data.ListOfPackets.Count == 0) return;
+
         foreach (var item in data.ListOfPackets.Keys)
         {
             if (characters.ContainsKey(item))

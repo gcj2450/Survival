@@ -1686,6 +1686,8 @@ struct MonoLocalCertificateSelectionCallback_t34F7772BA5ECE38E6CBD4C311F579DD1D4
 struct MonoRemoteCertificateValidationCallback_t1A389B61998873F6B9A2EE7A11C36333A8AECCA0;
 // MovementManager
 struct MovementManager_t9D2D2353559B705F88BEFA74EAE2490B90E03E50;
+// MovementPacketFromClient
+struct MovementPacketFromClient_t884330CC7633FEFD4659405B14FC4ABD96301F43;
 // ProtoBuf.Meta.MutableList
 struct MutableList_t3120C0EBF1975894C31018A3EFC96D9F11068EE7;
 // System.Xml.Schema.NamespaceList
@@ -4893,6 +4895,19 @@ struct MonoTlsProviderFactory_tCB12D9DF24B3A0006C0DB65F134BF58C8A6CFC96  : publi
 // UnityEngine.Rendering.MousePositionDebug
 struct MousePositionDebug_t213FBA65BBFFD74DD5FC04FFCE3FE88B9D00AC10  : public RuntimeObject
 {
+};
+
+// MovementPacketFromClient
+struct MovementPacketFromClient_t884330CC7633FEFD4659405B14FC4ABD96301F43  : public RuntimeObject
+{
+	// System.Int32 MovementPacketFromClient::<PacketId>k__BackingField
+	int32_t ___U3CPacketIdU3Ek__BackingField_0;
+	// System.Single MovementPacketFromClient::<Horizontal>k__BackingField
+	float ___U3CHorizontalU3Ek__BackingField_1;
+	// System.Single MovementPacketFromClient::<Vertical>k__BackingField
+	float ___U3CVerticalU3Ek__BackingField_2;
+	// System.Boolean MovementPacketFromClient::<isActionButtonOnePressed>k__BackingField
+	bool ___U3CisActionButtonOnePressedU3Ek__BackingField_3;
 };
 
 // UnityEngine.UI.MultipleDisplayUtilities
@@ -13422,35 +13437,6 @@ struct MeshLOD_t0452E56A1C5A7800F78238E2620E9DFC4E852124_marshaled_com
 // System.Xml.Schema.MiscFacetsChecker
 struct MiscFacetsChecker_t1574A3CFA038774ABB2F371FFC1A8F00357B5862  : public FacetsChecker_t1E1C22DA13A646441592D2B8C7DDB5A970B356D8
 {
-};
-
-// MovementPacketFromClient
-struct MovementPacketFromClient_t884330CC7633FEFD4659405B14FC4ABD96301F43 
-{
-	// System.Int32 MovementPacketFromClient::<PacketId>k__BackingField
-	int32_t ___U3CPacketIdU3Ek__BackingField_0;
-	// System.Single MovementPacketFromClient::<Horizontal>k__BackingField
-	float ___U3CHorizontalU3Ek__BackingField_1;
-	// System.Single MovementPacketFromClient::<Vertical>k__BackingField
-	float ___U3CVerticalU3Ek__BackingField_2;
-	// System.Boolean MovementPacketFromClient::<isActionButtonOnePressed>k__BackingField
-	bool ___U3CisActionButtonOnePressedU3Ek__BackingField_3;
-};
-// Native definition for P/Invoke marshalling of MovementPacketFromClient
-struct MovementPacketFromClient_t884330CC7633FEFD4659405B14FC4ABD96301F43_marshaled_pinvoke
-{
-	int32_t ___U3CPacketIdU3Ek__BackingField_0;
-	float ___U3CHorizontalU3Ek__BackingField_1;
-	float ___U3CVerticalU3Ek__BackingField_2;
-	int32_t ___U3CisActionButtonOnePressedU3Ek__BackingField_3;
-};
-// Native definition for COM marshalling of MovementPacketFromClient
-struct MovementPacketFromClient_t884330CC7633FEFD4659405B14FC4ABD96301F43_marshaled_com
-{
-	int32_t ___U3CPacketIdU3Ek__BackingField_0;
-	float ___U3CHorizontalU3Ek__BackingField_1;
-	float ___U3CVerticalU3Ek__BackingField_2;
-	int32_t ___U3CisActionButtonOnePressedU3Ek__BackingField_3;
 };
 
 // MovementPacketFromServer
@@ -34831,44 +34817,48 @@ struct Characters_t196CC29DD3E712B67443EA5DDB3CBDEE81645C0A  : public MonoBehavi
 	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___previousPosition_18;
 	// UnityEngine.Vector3 Characters::previousRotation
 	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___previousRotation_19;
+	// UnityEngine.Vector3 Characters::deltaToNonMain
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___deltaToNonMain_20;
 	// UnityEngine.Vector3 Characters::positionToMove
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___positionToMove_20;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___positionToMove_21;
 	// UnityEngine.Vector3 Characters::rotationToMove
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___rotationToMove_21;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___rotationToMove_22;
 	// System.Int32 Characters::correctionCount
-	int32_t ___correctionCount_22;
+	int32_t ___correctionCount_23;
 	// UnityEngine.Vector3 Characters::mydelta
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___mydelta_23;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___mydelta_24;
 	// UnityEngine.Vector3 Characters::whatIsPredDelta
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___whatIsPredDelta_24;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___whatIsPredDelta_25;
 	// System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.Vector3> Characters::planned
-	Dictionary_2_t419A958E6A3BEBD3C1EFC8A29C08B445103CDE0C* ___planned_25;
+	Dictionary_2_t419A958E6A3BEBD3C1EFC8A29C08B445103CDE0C* ___planned_26;
 	// System.Collections.Generic.List`1<UnityEngine.Vector3> Characters::positions
-	List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* ___positions_26;
+	List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* ___positions_27;
 	// System.Collections.Generic.Dictionary`2<System.Int64,UnityEngine.Vector3> Characters::packetsFromServer
-	Dictionary_2_tFF67F6D90EFA90DE5807607D56A5AB320DEEA211* ___packetsFromServer_27;
+	Dictionary_2_tFF67F6D90EFA90DE5807607D56A5AB320DEEA211* ___packetsFromServer_28;
 	// System.Int64 Characters::currentPacketID
-	int64_t ___currentPacketID_28;
+	int64_t ___currentPacketID_29;
 	// UnityEngine.Vector3 Characters::oldPosition
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___oldPosition_29;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___oldPosition_30;
 	// System.Single Characters::refreshTimer
-	float ___refreshTimer_30;
+	float ___refreshTimer_31;
 	// System.Single Characters::smoothKoeff
-	float ___smoothKoeff_31;
+	float ___smoothKoeff_32;
 	// System.Int64 Characters::lastUpdateTimeMark
-	int64_t ___lastUpdateTimeMark_32;
+	int64_t ___lastUpdateTimeMark_33;
 	// System.Int64 Characters::reconUpdateMark
-	int64_t ___reconUpdateMark_33;
+	int64_t ___reconUpdateMark_34;
+	// System.Int64 Characters::deltaUpdateMark
+	int64_t ___deltaUpdateMark_35;
 	// UnityEngine.Transform Characters::testCube
-	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___testCube_34;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___testCube_36;
 	// System.Int32 Characters::unique
-	int32_t ___unique_35;
+	int32_t ___unique_37;
 	// System.Single Characters::timer
-	float ___timer_36;
+	float ___timer_38;
 	// System.Single Characters::refreshMoveAnimationLimit
-	float ___refreshMoveAnimationLimit_37;
+	float ___refreshMoveAnimationLimit_39;
 	// System.Boolean Characters::isStop
-	bool ___isStop_38;
+	bool ___isStop_40;
 };
 
 // ChatController
@@ -35501,7 +35491,7 @@ struct MovementManager_t9D2D2353559B705F88BEFA74EAE2490B90E03E50  : public MonoB
 	// Clients MovementManager::connections
 	Clients_t979640B75E051E1DD6AAC2B83D2DA39E6A64F7C9* ___connections_11;
 	// MovementPacketFromClient MovementManager::movementPacketFromClient
-	MovementPacketFromClient_t884330CC7633FEFD4659405B14FC4ABD96301F43 ___movementPacketFromClient_12;
+	MovementPacketFromClient_t884330CC7633FEFD4659405B14FC4ABD96301F43* ___movementPacketFromClient_12;
 	// System.Threading.CancellationTokenSource MovementManager::cancelTokenSource
 	CancellationTokenSource_tAAE1E0033BCFC233801F8CB4CED5C852B350CB7B* ___cancelTokenSource_13;
 	// System.Threading.CancellationToken MovementManager::token
@@ -40594,6 +40584,10 @@ struct MousePositionDebug_t213FBA65BBFFD74DD5FC04FFCE3FE88B9D00AC10_StaticFields
 };
 
 // UnityEngine.Rendering.MousePositionDebug
+
+// MovementPacketFromClient
+
+// MovementPacketFromClient
 
 // UnityEngine.UI.MultipleDisplayUtilities
 
@@ -45808,10 +45802,6 @@ struct MeshId_t2CF122567F06D0AA4F80DDA5CB51E8CD3B7EA2AC_StaticFields
 // System.Xml.Schema.MiscFacetsChecker
 
 // System.Xml.Schema.MiscFacetsChecker
-
-// MovementPacketFromClient
-
-// MovementPacketFromClient
 
 // MovementPacketFromServer
 
@@ -55931,7 +55921,7 @@ const Il2CppTypeDefinitionSizes g_typeDefinitionSize6692 = { sizeof(ProtobufSche
 extern const Il2CppTypeDefinitionSizes g_typeDefinitionSize6693;
 const Il2CppTypeDefinitionSizes g_typeDefinitionSize6693 = { sizeof(RSAExchange_t5E78D22138F697E1152D54BEFDAA900D2794B424)+ sizeof(RuntimeObject), sizeof(RSAExchange_t5E78D22138F697E1152D54BEFDAA900D2794B424_marshaled_pinvoke), 0, 0 };
 extern const Il2CppTypeDefinitionSizes g_typeDefinitionSize6694;
-const Il2CppTypeDefinitionSizes g_typeDefinitionSize6694 = { sizeof(MovementPacketFromClient_t884330CC7633FEFD4659405B14FC4ABD96301F43)+ sizeof(RuntimeObject), sizeof(MovementPacketFromClient_t884330CC7633FEFD4659405B14FC4ABD96301F43_marshaled_pinvoke), 0, 0 };
+const Il2CppTypeDefinitionSizes g_typeDefinitionSize6694 = { sizeof(MovementPacketFromClient_t884330CC7633FEFD4659405B14FC4ABD96301F43), -1, 0, 0 };
 extern const Il2CppTypeDefinitionSizes g_typeDefinitionSize6695;
 const Il2CppTypeDefinitionSizes g_typeDefinitionSize6695 = { sizeof(MovementPacketFromServer_tCCE276A23C8D10E0B5B70E4E96E98AC6C7525D90)+ sizeof(RuntimeObject), sizeof(MovementPacketFromServer_tCCE276A23C8D10E0B5B70E4E96E98AC6C7525D90), 0, 0 };
 extern const Il2CppTypeDefinitionSizes g_typeDefinitionSize6696;

@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
@@ -14,6 +14,7 @@ public class TerrainGenerator : MonoBehaviour
 
     private Vector3[] vertices;
     private Mesh mesh;
+    private MeshCollider meshCollider;
 
     private List<Vector3> heights = new List<Vector3>();
     private Dictionary<Vector2, float> heightMaps = new Dictionary<Vector2, float>();
@@ -90,6 +91,17 @@ public class TerrainGenerator : MonoBehaviour
 
         mesh.triangles = triangles;
         mesh.RecalculateNormals();
+                
+        MeshCollider currentMeshCollider = GetComponent<MeshCollider>();
+
+        if (currentMeshCollider != null)
+        {
+            GameObject.Destroy(currentMeshCollider);
+        }
+
+        gameObject.AddComponent<MeshCollider>();
+
+        
     }
 
     public void TerrainUpdater(Vector3 newPosition)

@@ -33,6 +33,21 @@ public class TCPIncomingPacketManager : MonoBehaviour
                             characterManagement.InitPlayerData(initData.ObjectId, initData);
                             //Debug.Log(mainPlayerDataPacket.ObjectId + " = " + mainPlayerDataPacket.AppearanceId + " = " + mainPlayerDataPacket.Name);
                             break;
+
+                        case 2://get movement data
+                            cleanData = Encryption.TakeSomeToArrayFromNumber(data, 1);
+                            Encryption.Decode(ref cleanData, Globals.RSASecretCode);
+                            MovementPacketFromServer mover = ProtobufSchemes.DeserializeProtoBuf<MovementPacketFromServer>(cleanData);
+                            characterManagement.UpdateMovementData(mover.ObjectId, mover);
+                            break;
+
+                        case 6://get movement data                            
+                            byte[] cleanData1 = Encryption.TakeSomeToArrayFromNumber(data, 1);
+                            Encryption.Decode(ref cleanData1, Globals.RSASecretCode);
+                            ListOfMovementPacketsFromServer movers = ProtobufSchemes.DeserializeProtoBuf<ListOfMovementPacketsFromServer>(cleanData1);
+                            characterManagement.UpdateMovementData(movers);
+
+                            break;
                     }
                 }
             }

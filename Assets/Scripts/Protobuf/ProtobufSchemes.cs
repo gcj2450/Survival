@@ -63,7 +63,7 @@ public struct RSAExchange
 }
 
 [ProtoContract]
-public struct MovementPacketFromClient
+public class MovementPacketFromClient
 {
     [ProtoMember(1)]
     public int PacketId { get; set; }
@@ -168,7 +168,7 @@ public struct ListOfMovementPacketsFromServer
     {
         ListOfPackets = new Dictionary<long, MovementPacketFromServer>();
     }
-
+        
     public void AddOrUpdate(MovementPacketFromServer packet)
     {
         if (!ListOfPackets.ContainsKey(packet.ObjectId))

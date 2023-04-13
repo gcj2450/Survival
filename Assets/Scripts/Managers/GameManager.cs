@@ -21,10 +21,9 @@ public class GameManager : MonoBehaviour
 
 
     public static string datat;
-
     private Clients connections;
     private PingMeter pingMeter;
-    
+       
     private void Awake()
     {
         //screen
@@ -92,5 +91,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         speedText.text = datat;
+        
     }
+
 }

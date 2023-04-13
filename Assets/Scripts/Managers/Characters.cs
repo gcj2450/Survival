@@ -52,6 +52,7 @@ public class Characters : MonoBehaviour
 
     private Vector3 previousPosition = Vector3.zero;
     private Vector3 previousRotation = Vector3.zero;
+    private Vector3 deltaToNonMain = Vector3.zero;
 
     private Vector3 positionToMove = Vector3.zero;
     private Vector3 rotationToMove = Vector3.zero;
@@ -68,9 +69,9 @@ public class Characters : MonoBehaviour
 
     private Vector3 oldPosition = Vector3.zero;
     private float refreshTimer;
-    private float smoothKoeff = 0;
+    private float smoothKoeff = 0.1f;
         
-    private long lastUpdateTimeMark, reconUpdateMark;
+    private long lastUpdateTimeMark, reconUpdateMark, deltaUpdateMark;
 
     [SerializeField] private Transform testCube;
 
@@ -106,6 +107,7 @@ public class Characters : MonoBehaviour
 
 
         long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;
+        deltaUpdateMark = currentTimeStamp - lastUpdateTimeMark;
         lastUpdateTimeMark = currentTimeStamp;
 
         if ((position == Vector3.zero && rotation.y == 0) || previousPosition == position)
@@ -116,8 +118,12 @@ public class Characters : MonoBehaviour
                 
         isStop = false;
 
+        //print("non: " + (position - characterTransformPosition).magnitude.ToString("f2"));
+
+        smoothKoeff = 0.1f;
+
         characterTransformPosition = position;
-        rotationToMove = rotation;
+        rotationToMove = rotation;     
 
         previousPosition = position;
 
@@ -127,7 +133,8 @@ public class Characters : MonoBehaviour
 
     public void UpdateTransformForMainPlayer(Vector3 position, Vector3 rotation, long packetOrder)
     {
-        long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;        
+        long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;
+        deltaUpdateMark = currentTimeStamp - lastUpdateTimeMark;
 
         if (packetOrder > 0)
         {         
@@ -156,7 +163,8 @@ public class Characters : MonoBehaviour
                     characterTransform.position = position - whatIsPredDelta;
                 }*/
 
-             
+                smoothKoeff = 0.1f;
+
                 characterTransformPosition = position + whatIsPredDelta;
                 //playerVisualPosition.position = position + whatIsPredDelta;
                 //characterTransformPosition = position;
@@ -193,9 +201,9 @@ public class Characters : MonoBehaviour
 
     private void SetNewUpdateDataFromPrediction(Vector3 position, Vector3 rotation)
     {
-        long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;
+        //long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;
 
-        //if ((currentTimeStamp - reconUpdateMark) > 20)
+        //if ((currentTimeStamp - reconUpdateMark) > 15)
         //{
             characterTransformPosition = position;
             //if (smoothKoeff > 0.02f) smoothKoeff -= Time.deltaTime;
@@ -207,20 +215,37 @@ public class Characters : MonoBehaviour
 
 
     private void Update()
-    {       
+    {
+        /*
         if (!IsItMainPlayer && !isStop)
         {
-            long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;
+            deltaToNonMain = transform.forward * (0.2f / (Globals.TICKf / Time.deltaTime - 1));
 
-            if ((currentTimeStamp - lastUpdateTimeMark) > 15)
-            {
-                characterTransformPosition += transform.forward * 0.1f;
-                //lastUpdateTimeMark = currentTimeStamp;
-            }
+            characterTransformPosition += deltaToNonMain;
+
         }
+        else if (!IsItMainPlayer && isStop)
+        {
+            deltaToNonMain = Vector3.zero;
+        }
+        */
 
-        //if (timer > refreshMoveAnimationLimit)
-        //{
+            /*
+            if (!IsItMainPlayer && !isStop)
+            {
+
+
+                long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;
+
+                if ((currentTimeStamp - lastUpdateTimeMark) > 15)
+                {
+                    characterTransformPosition += transform.forward * (0.2f / (Globals.TICKf/Time.deltaTime - 1));
+                }
+
+            }*/
+
+            //if (timer > refreshMoveAnimationLimit)
+            //{
             timer = 0;
             float positionMagnitude = (characterTransformPosition - oldPosition).magnitude;
 
@@ -243,17 +268,19 @@ public class Characters : MonoBehaviour
 
         smoothKoeff = 0.1f;
 
+
+
+
         playerVisualPosition.position = Vector3.SmoothDamp(
             playerVisualPosition.position,
-            characterTransformPosition,                
+            characterTransformPosition,
             ref speedVector,
             smoothKoeff);
 
-        
-
-        playerVisualPosition.rotation = Quaternion.Lerp(
-            Quaternion.Euler(0, playerVisualPosition.rotation.eulerAngles.y, 0),
-            Quaternion.Euler(rotationToMove), ROTATION_SPEED);
+            playerVisualPosition.rotation = Quaternion.Lerp(
+                Quaternion.Euler(0, playerVisualPosition.rotation.eulerAngles.y, 0),
+                Quaternion.Euler(rotationToMove), ROTATION_SPEED);
+                
 
      
         if (refreshTimer > 0.3f)
@@ -267,10 +294,6 @@ public class Characters : MonoBehaviour
         }
 
         //print(unique + ": " + (characterTransformPosition - oldPosition).magnitude);
-
-        
-
-        
     }
    
 }

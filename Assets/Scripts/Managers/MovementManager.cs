@@ -130,6 +130,7 @@ public class MovementManager : MonoBehaviour
                     pingMeter?.InTimerData(Globals.Timer.ElapsedMilliseconds, movementPacketFromClient.PacketId);
                     byte[] bytes = ProtobufSchemes.SerializeProtoBuf(movementPacketFromClient);
                     connections.SendUDP(bytes, true, Globals.PacketCode.MoveFromClient);
+                    //connections.SendTCP(bytes, true, Globals.PacketCode.MoveFromClient);
                     sumOfJoystickInput = Vector2.zero;
                 }
                 else
@@ -142,6 +143,7 @@ public class MovementManager : MonoBehaviour
                     pingMeter?.InTimerData(Globals.Timer.ElapsedMilliseconds, movementPacketFromClient.PacketId);
                     byte[] bytes = ProtobufSchemes.SerializeProtoBuf(movementPacketFromClient);
                     connections.SendUDP(bytes, true, Globals.PacketCode.MoveFromClient);
+                    //connections.SendTCP(bytes, true, Globals.PacketCode.MoveFromClient);
 
                     sumOfJoystickInput = Vector2.zero;                    
                 }

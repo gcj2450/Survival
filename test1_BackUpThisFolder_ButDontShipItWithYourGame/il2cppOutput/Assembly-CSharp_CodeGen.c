@@ -5153,16 +5153,6 @@ extern void RSAExchange_set_PublicKey_mA7717AC7AD3EE90E4AB3852ECF11D456283D66B3_
 extern void RSAExchange_get_TicketID_m58E980F82C4D01A16505D9FF66700017C59F00A3_AdjustorThunk (void);
 extern void RSAExchange_set_TicketID_mA73047A9BD3B38E776A125BDBE49244F42F01608_AdjustorThunk (void);
 extern void RSAExchange__ctor_mC169305ED000A3F054A132C77CBD1078645A96C0_AdjustorThunk (void);
-extern void MovementPacketFromClient_get_PacketId_mA00C89BE42730CF933EF0BC1FE4389E3A1AE7F47_AdjustorThunk (void);
-extern void MovementPacketFromClient_set_PacketId_m169FE27869CF04467C103117055A206B910F1FB8_AdjustorThunk (void);
-extern void MovementPacketFromClient_get_Horizontal_m475C2F448FA442473EBE1EBBCEBB29676847491A_AdjustorThunk (void);
-extern void MovementPacketFromClient_set_Horizontal_m20A219CB6855A94E0D3C709EF76280DA124A13E6_AdjustorThunk (void);
-extern void MovementPacketFromClient_get_Vertical_m90BC1122657996CD8BBF2CC6F5D05CB9DFBB03A1_AdjustorThunk (void);
-extern void MovementPacketFromClient_set_Vertical_m4AF74EA81EAD6947DB6EBBFDFA7C77A33A9F76BA_AdjustorThunk (void);
-extern void MovementPacketFromClient_get_isActionButtonOnePressed_mE009C51D20DC7F866AF625DEBD51F3025EA067B9_AdjustorThunk (void);
-extern void MovementPacketFromClient_set_isActionButtonOnePressed_m780358D2D4082C6D8C42257656942B1E9D35D06C_AdjustorThunk (void);
-extern void MovementPacketFromClient__ctor_m67B5300C9C8E5E60885662266A6F5BF938AA4746_AdjustorThunk (void);
-extern void MovementPacketFromClient_Update_m9514F1306DF7509928DF8F7ABAAA501EEEA261E3_AdjustorThunk (void);
 extern void MovementPacketFromServer__ctor_m15E5A2CE86E95AD56689563063B64162D5AE3211_AdjustorThunk (void);
 extern void MovementPacketFromServer_get_PacketOrder_m8D59E9E31094BC2E18F415C7E0CFCC88CB1057C5_AdjustorThunk (void);
 extern void MovementPacketFromServer_set_PacketOrder_m38A6E6975C86008910AB99A00894DDC272E88BF3_AdjustorThunk (void);
@@ -5205,7 +5195,7 @@ extern void ListOfMovementPacketsFromServer_Clear_mF1E7FB211059B17F602F49D5413C9
 extern void MemCacheEntry__ctor_mD4797860A6FF367C4F0FFAA00ADCA0CFC96F9985_AdjustorThunk (void);
 extern void MemCacheEntry__ctor_mE48C8511DE94FB7EA7D2ADD5FB4A569ABBE32334_AdjustorThunk (void);
 extern void FileCacheEntry__ctor_mBEE104608C2AC8E98FECB30FABD1F1B3FAFB8DD2_AdjustorThunk (void);
-static Il2CppTokenAdjustorThunkPair s_adjustorThunks[65] = 
+static Il2CppTokenAdjustorThunkPair s_adjustorThunks[55] = 
 {
 	{ 0x06000085, U3CExchangeDataU3Ed__4_MoveNext_m8E18B3D67C6170DD7EDE1C9CC9D374453074415A_AdjustorThunk },
 	{ 0x06000086, U3CExchangeDataU3Ed__4_SetStateMachine_mF46A5913C71BEB060ADCE85B0389D9DB1B995378_AdjustorThunk },
@@ -5220,16 +5210,6 @@ static Il2CppTokenAdjustorThunkPair s_adjustorThunks[65] =
 	{ 0x060000EE, RSAExchange_get_TicketID_m58E980F82C4D01A16505D9FF66700017C59F00A3_AdjustorThunk },
 	{ 0x060000EF, RSAExchange_set_TicketID_mA73047A9BD3B38E776A125BDBE49244F42F01608_AdjustorThunk },
 	{ 0x060000F0, RSAExchange__ctor_mC169305ED000A3F054A132C77CBD1078645A96C0_AdjustorThunk },
-	{ 0x060000F1, MovementPacketFromClient_get_PacketId_mA00C89BE42730CF933EF0BC1FE4389E3A1AE7F47_AdjustorThunk },
-	{ 0x060000F2, MovementPacketFromClient_set_PacketId_m169FE27869CF04467C103117055A206B910F1FB8_AdjustorThunk },
-	{ 0x060000F3, MovementPacketFromClient_get_Horizontal_m475C2F448FA442473EBE1EBBCEBB29676847491A_AdjustorThunk },
-	{ 0x060000F4, MovementPacketFromClient_set_Horizontal_m20A219CB6855A94E0D3C709EF76280DA124A13E6_AdjustorThunk },
-	{ 0x060000F5, MovementPacketFromClient_get_Vertical_m90BC1122657996CD8BBF2CC6F5D05CB9DFBB03A1_AdjustorThunk },
-	{ 0x060000F6, MovementPacketFromClient_set_Vertical_m4AF74EA81EAD6947DB6EBBFDFA7C77A33A9F76BA_AdjustorThunk },
-	{ 0x060000F7, MovementPacketFromClient_get_isActionButtonOnePressed_mE009C51D20DC7F866AF625DEBD51F3025EA067B9_AdjustorThunk },
-	{ 0x060000F8, MovementPacketFromClient_set_isActionButtonOnePressed_m780358D2D4082C6D8C42257656942B1E9D35D06C_AdjustorThunk },
-	{ 0x060000F9, MovementPacketFromClient__ctor_m67B5300C9C8E5E60885662266A6F5BF938AA4746_AdjustorThunk },
-	{ 0x060000FA, MovementPacketFromClient_Update_m9514F1306DF7509928DF8F7ABAAA501EEEA261E3_AdjustorThunk },
 	{ 0x060000FB, MovementPacketFromServer__ctor_m15E5A2CE86E95AD56689563063B64162D5AE3211_AdjustorThunk },
 	{ 0x060000FC, MovementPacketFromServer_get_PacketOrder_m8D59E9E31094BC2E18F415C7E0CFCC88CB1057C5_AdjustorThunk },
 	{ 0x060000FD, MovementPacketFromServer_set_PacketOrder_m38A6E6975C86008910AB99A00894DDC272E88BF3_AdjustorThunk },
@@ -5382,7 +5362,7 @@ static const int32_t s_InvokerIndices[1709] =
 	8024,
 	6573,
 	8299,
-	14183,
+	14181,
 	8024,
 	8024,
 	8299,
@@ -5391,21 +5371,21 @@ static const int32_t s_InvokerIndices[1709] =
 	1735,
 	4929,
 	1735,
-	14226,
-	14226,
-	14183,
-	13052,
-	13105,
+	14224,
+	14224,
+	14181,
+	13050,
+	13103,
 	6038,
 	11501,
 	11497,
 	9982,
 	11823,
-	13052,
-	13052,
-	13052,
-	14183,
-	13048,
+	13050,
+	13050,
+	13050,
+	14181,
+	13047,
 	8299,
 	8299,
 	6699,
@@ -5425,13 +5405,13 @@ static const int32_t s_InvokerIndices[1709] =
 	6663,
 	10866,
 	10881,
-	13052,
-	13052,
+	13050,
+	13050,
 	8299,
 	4034,
 	8145,
 	8299,
-	14226,
+	14224,
 	6699,
 	6663,
 	8299,
@@ -5589,7 +5569,7 @@ static const int32_t s_InvokerIndices[1709] =
 	8145,
 	8299,
 	8299,
-	14226,
+	14224,
 	8299,
 	8299,
 	6663,
@@ -5771,7 +5751,7 @@ static const int32_t s_InvokerIndices[1709] =
 	8145,
 	8145,
 	8299,
-	14226,
+	14224,
 	6663,
 	8299,
 	8024,
@@ -5977,7 +5957,7 @@ static const int32_t s_InvokerIndices[1709] =
 	2160,
 	2160,
 	1531,
-	14226,
+	14224,
 	8299,
 	925,
 	3933,
@@ -6770,8 +6750,8 @@ static const int32_t s_InvokerIndices[1709] =
 	8299,
 	6573,
 	8299,
-	13041,
-	13041,
+	13040,
+	13040,
 	8299,
 	6699,
 	2576,
@@ -7003,7 +6983,7 @@ const Il2CppCodeGenModule g_AssemblyU2DCSharp_CodeGenModule =
 	"Assembly-CSharp.dll",
 	1709,
 	s_methodPointers,
-	65,
+	55,
 	s_adjustorThunks,
 	s_InvokerIndices,
 	0,
