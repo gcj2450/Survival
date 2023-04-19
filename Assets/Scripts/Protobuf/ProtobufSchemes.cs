@@ -94,16 +94,15 @@ public class MovementPacketFromClient
 [ProtoContract]
 public struct MovementPacketFromServer
 {
-    public MovementPacketFromServer(uint id, long objectId, float positionX, float positionY, float positionZ, float rotationX, float rotationY, float rotationZ)
+    public MovementPacketFromServer(uint id, long objectId, float positionX, float positionY, float positionZ, float rotationY, byte animation)
     {
         PacketOrder = id;
         ObjectId = objectId;
         PositionX = positionX;
         PositionY = positionY;
         PositionZ = positionZ;
-        RotationX = rotationX;
         RotationY = rotationY;
-        RotationZ = rotationZ;
+        AnimationID = animation;
     }
 
     [ProtoMember(1)]
@@ -117,11 +116,9 @@ public struct MovementPacketFromServer
     [ProtoMember(5)]
     public float PositionZ { get; set; }
     [ProtoMember(6)]
-    public float RotationX { get; set; }
-    [ProtoMember(7)]
     public float RotationY { get; set; }
-    [ProtoMember(8)]
-    public float RotationZ { get; set; }
+    [ProtoMember(7)]
+    public byte AnimationID { get; set; }
 
 }
 

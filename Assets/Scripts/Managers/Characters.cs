@@ -57,6 +57,8 @@ public class Characters : MonoBehaviour
     private Vector3 positionToMove = Vector3.zero;
     private Vector3 rotationToMove = Vector3.zero;
     private int correctionCount = 0;
+
+    private byte animationId;
         
     public Vector3 mydelta = Vector3.zero;
     public Vector3 whatIsPredDelta = Vector3.zero;
@@ -102,10 +104,8 @@ public class Characters : MonoBehaviour
         positions.Add(position);        
     }
 
-    public void UpdateTransformForNonMain(Vector3 position, Vector3 rotation)
+    public void UpdateTransformForNonMain(Vector3 position, Vector3 rotation, byte animation)
     {
-
-
         long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;
         deltaUpdateMark = currentTimeStamp - lastUpdateTimeMark;
         lastUpdateTimeMark = currentTimeStamp;
@@ -117,109 +117,63 @@ public class Characters : MonoBehaviour
 
         previousPosition = position;
         previousRotation = rotation;
-
-
-        /*
-        if ((position == Vector3.zero && rotation.y == 0) || previousPosition == position)
-        {            
-            isStop = true;            
-            return;
-        }
-                
-        isStop = false;
-
-        //print("non: " + (position - characterTransformPosition).magnitude.ToString("f2"));
-
-        smoothKoeff = 0.1f;
-
-        characterTransformPosition = position;
-        rotationToMove = rotation;     
-
-        previousPosition = position;
-        */
-
+        animationId = animation;
     }
 
 
-    public void UpdateTransformForMainPlayer(Vector3 position, Vector3 rotation, long packetOrder)
+    public void UpdateTransformForMainPlayer(Vector3 position, Vector3 rotation, byte animation)
     {
         long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;
         deltaUpdateMark = currentTimeStamp - lastUpdateTimeMark;
 
-        //if (packetOrder > 0)
-        //{
-
-        //GameObject g = blueforServer_pool.GetPrefab();
-        //g.SetActive(true);
-        //g.transform.position = position;
+        //print(Globals.Timer.ElapsedMilliseconds);
 
         characterTransformPosition = position;
         rotationToMove = rotation;
 
-        //print((position - previousPosition).magnitude);
-
         previousPosition = position;
         previousRotation = rotation;
 
-        //print(packetOrder + " = " + position + " = " + rotation);
-        /*
-        if (position == Vector3.zero && rotation.y == 0)
-        {
-            isStop = true;
-            return;
-        }
-
-
-        isStop = false;
-        if (testCube != null) testCube.transform.localScale = Vector3.one;
-
-        currentPacketID = packetOrder;
-        if (!packetsFromServer.ContainsKey(packetOrder)) packetsFromServer.Add(packetOrder, position);
-        rotationToMove = rotation;
-
-        float difference = (position - (characterTransformPosition - whatIsPredDelta)).magnitude;
-
-        if (difference > 0.01f)
-        {
-
-            smoothKoeff = 0.1f;
-
-            characterTransformPosition = position + whatIsPredDelta;          
-            positions.Add(characterTransformPosition);
-
-            reconUpdateMark = currentTimeStamp;
-
-        }            
-        */
-
         if (testCube != null) testCube.position = position;       
-            lastUpdateTimeMark = currentTimeStamp;
-        //}
-        //else
-        //{
-        //    SetNewUpdateDataFromPrediction(position, rotation);
-        //}
-    }
-
-
-    private void SetNewUpdateDataFromPrediction(Vector3 position, Vector3 rotation)
-    {
-        //long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;
-
-        //if ((currentTimeStamp - reconUpdateMark) > 15)
-        //{
-            characterTransformPosition = position;
-            //if (smoothKoeff > 0.02f) smoothKoeff -= Time.deltaTime;
-            //positions.Add(characterTransformPosition);
-            //rotationToMove = rotation;
-        //}
         
+        lastUpdateTimeMark = currentTimeStamp;
+        animationId = animation;
     }
-
 
     private void Update()
-    {
-        
+    {        
+        long currentTimeStamp = Globals.Timer.ElapsedMilliseconds;
+
+        if (animationId > 0 && (currentTimeStamp - lastUpdateTimeMark) > Globals.TICKi * WAIT_EXCEED_LIMIT)
+        {
+            print("corrected");
+            lastUpdateTimeMark = currentTimeStamp;
+            characterTransformPosition += playerVisualPosition.forward * 0.2f;
+        }
+
+        if (animationId == 1)
+        {
+            smoothKoeff = 0.2f;
+            characterAnimator.SetNewAnimation(PlayerAnimationStates.run);
+        }
+        else if (animationId == 0)
+        {            
+            if (smoothKoeff > 0)
+            {
+                smoothKoeff -= Time.deltaTime;
+            }
+
+            if (smoothKoeff <= 0)
+            {
+                characterAnimator.SetNewAnimation(PlayerAnimationStates.idle);
+            }
+            else
+            {
+                characterAnimator.SetNewAnimation(PlayerAnimationStates.run);
+            }
+        }
+
+        /*
         if (timer > 0.1f)
         {
             timer = 0;
@@ -241,8 +195,7 @@ public class Characters : MonoBehaviour
         {
             timer += Time.deltaTime;
         }
-              
-        smoothKoeff = 0.2f;
+        */
 
         
         playerVisualPosition.position = Vector3.SmoothDamp(

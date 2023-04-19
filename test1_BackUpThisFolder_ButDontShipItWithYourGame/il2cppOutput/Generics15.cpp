@@ -905,12 +905,10 @@ struct MovementPacketFromServer_tCCE276A23C8D10E0B5B70E4E96E98AC6C7525D90
 	float ___U3CPositionYU3Ek__BackingField_3;
 	// System.Single MovementPacketFromServer::<PositionZ>k__BackingField
 	float ___U3CPositionZU3Ek__BackingField_4;
-	// System.Single MovementPacketFromServer::<RotationX>k__BackingField
-	float ___U3CRotationXU3Ek__BackingField_5;
 	// System.Single MovementPacketFromServer::<RotationY>k__BackingField
-	float ___U3CRotationYU3Ek__BackingField_6;
-	// System.Single MovementPacketFromServer::<RotationZ>k__BackingField
-	float ___U3CRotationZU3Ek__BackingField_7;
+	float ___U3CRotationYU3Ek__BackingField_5;
+	// System.Byte MovementPacketFromServer::<AnimationID>k__BackingField
+	uint8_t ___U3CAnimationIDU3Ek__BackingField_6;
 };
 
 // System.Runtime.Serialization.StreamingContext

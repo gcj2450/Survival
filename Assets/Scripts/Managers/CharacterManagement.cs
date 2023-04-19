@@ -70,15 +70,16 @@ public class CharacterManagement : MonoBehaviour
 
                 characters[objectID].UpdateTransformForMainPlayer(
                 new Vector3(data.PositionX, data.PositionY, data.PositionZ),
-                new Vector3(data.RotationX, data.RotationY, data.RotationZ),
-                data.PacketOrder
+                new Vector3(0, data.RotationY, 0),
+                data.AnimationID
                 );
             }
             else
             {
                 characters[objectID].UpdateTransformForNonMain(
                 new Vector3(data.PositionX, data.PositionY, data.PositionZ),
-                new Vector3(data.RotationX, data.RotationY, data.RotationZ)
+                new Vector3(0, data.RotationY, 0),
+                data.AnimationID
                 );
             }
         }
@@ -93,7 +94,7 @@ public class CharacterManagement : MonoBehaviour
             Characters characterObject = playerObject.GetComponent<Characters>();
             characterObject.SetTransform(
                 new Vector3(data.PositionX, data.PositionY, data.PositionZ),
-                new Vector3(data.RotationX, data.RotationY, data.RotationZ));
+                new Vector3(0, data.RotationY,0));
 
             
             characters.Add(objectID, characterObject);
@@ -117,15 +118,16 @@ public class CharacterManagement : MonoBehaviour
 
                     characters[item].UpdateTransformForMainPlayer(
                         new Vector3(data.ListOfPackets[item].PositionX, data.ListOfPackets[item].PositionY, data.ListOfPackets[item].PositionZ),
-                        new Vector3(data.ListOfPackets[item].RotationX, data.ListOfPackets[item].RotationY, data.ListOfPackets[item].RotationZ),
-                        data.ListOfPackets[item].PacketOrder
+                        new Vector3(0, data.ListOfPackets[item].RotationY, 0),
+                        data.ListOfPackets[item].AnimationID
                     );
                 }
                 else
                 {
                     characters[item].UpdateTransformForNonMain(
                         new Vector3(data.ListOfPackets[item].PositionX, data.ListOfPackets[item].PositionY, data.ListOfPackets[item].PositionZ),
-                        new Vector3(data.ListOfPackets[item].RotationX, data.ListOfPackets[item].RotationY, data.ListOfPackets[item].RotationZ)
+                        new Vector3(0, data.ListOfPackets[item].RotationY, 0),
+                        data.ListOfPackets[item].AnimationID
                     );
                 }
             }
@@ -140,7 +142,7 @@ public class CharacterManagement : MonoBehaviour
                 Characters characterObject = playerObject.GetComponent<Characters>();
                 characterObject.SetTransform(
                     new Vector3(data.ListOfPackets[item].PositionX, data.ListOfPackets[item].PositionY, data.ListOfPackets[item].PositionZ),
-                    new Vector3(data.ListOfPackets[item].RotationX, data.ListOfPackets[item].RotationY, data.ListOfPackets[item].RotationZ));
+                    new Vector3(0, data.ListOfPackets[item].RotationY, 0));
 
 
                 characters.Add(item, characterObject);

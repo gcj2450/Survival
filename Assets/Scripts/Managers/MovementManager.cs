@@ -76,7 +76,7 @@ public class MovementManager : MonoBehaviour
             //TODEL
             fromPositionAgregate += playerPositionByPrediction;
 
-            mainPlayerCharacter.UpdateTransformForMainPlayer(mainPlayerCharacter.GetCharacterTransform() + playerPositionByPrediction, playerRotationByPrediction, -1);
+            //mainPlayerCharacter.UpdateTransformForMainPlayer(mainPlayerCharacter.GetCharacterTransform() + playerPositionByPrediction, playerRotationByPrediction, -1);
             
         }
         else

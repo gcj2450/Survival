@@ -13452,12 +13452,10 @@ struct MovementPacketFromServer_tCCE276A23C8D10E0B5B70E4E96E98AC6C7525D90
 	float ___U3CPositionYU3Ek__BackingField_3;
 	// System.Single MovementPacketFromServer::<PositionZ>k__BackingField
 	float ___U3CPositionZU3Ek__BackingField_4;
-	// System.Single MovementPacketFromServer::<RotationX>k__BackingField
-	float ___U3CRotationXU3Ek__BackingField_5;
 	// System.Single MovementPacketFromServer::<RotationY>k__BackingField
-	float ___U3CRotationYU3Ek__BackingField_6;
-	// System.Single MovementPacketFromServer::<RotationZ>k__BackingField
-	float ___U3CRotationZU3Ek__BackingField_7;
+	float ___U3CRotationYU3Ek__BackingField_5;
+	// System.Byte MovementPacketFromServer::<AnimationID>k__BackingField
+	uint8_t ___U3CAnimationIDU3Ek__BackingField_6;
 };
 
 // ProtoBuf.Meta.MutableList
@@ -34836,40 +34834,42 @@ struct Characters_t196CC29DD3E712B67443EA5DDB3CBDEE81645C0A  : public MonoBehavi
 	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___rotationToMove_22;
 	// System.Int32 Characters::correctionCount
 	int32_t ___correctionCount_23;
+	// System.Byte Characters::animationId
+	uint8_t ___animationId_24;
 	// UnityEngine.Vector3 Characters::mydelta
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___mydelta_24;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___mydelta_25;
 	// UnityEngine.Vector3 Characters::whatIsPredDelta
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___whatIsPredDelta_25;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___whatIsPredDelta_26;
 	// System.Collections.Generic.Dictionary`2<System.Int32,UnityEngine.Vector3> Characters::planned
-	Dictionary_2_t419A958E6A3BEBD3C1EFC8A29C08B445103CDE0C* ___planned_26;
+	Dictionary_2_t419A958E6A3BEBD3C1EFC8A29C08B445103CDE0C* ___planned_27;
 	// System.Collections.Generic.List`1<UnityEngine.Vector3> Characters::positions
-	List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* ___positions_27;
+	List_1_t77B94703E05C519A9010DD0614F757F974E1CD8B* ___positions_28;
 	// System.Collections.Generic.Dictionary`2<System.Int64,UnityEngine.Vector3> Characters::packetsFromServer
-	Dictionary_2_tFF67F6D90EFA90DE5807607D56A5AB320DEEA211* ___packetsFromServer_28;
+	Dictionary_2_tFF67F6D90EFA90DE5807607D56A5AB320DEEA211* ___packetsFromServer_29;
 	// System.Int64 Characters::currentPacketID
-	int64_t ___currentPacketID_29;
+	int64_t ___currentPacketID_30;
 	// UnityEngine.Vector3 Characters::oldPosition
-	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___oldPosition_30;
+	Vector3_t24C512C7B96BBABAD472002D0BA2BDA40A5A80B2 ___oldPosition_31;
 	// System.Single Characters::refreshTimer
-	float ___refreshTimer_31;
+	float ___refreshTimer_32;
 	// System.Single Characters::smoothKoeff
-	float ___smoothKoeff_32;
+	float ___smoothKoeff_33;
 	// System.Int64 Characters::lastUpdateTimeMark
-	int64_t ___lastUpdateTimeMark_33;
+	int64_t ___lastUpdateTimeMark_34;
 	// System.Int64 Characters::reconUpdateMark
-	int64_t ___reconUpdateMark_34;
+	int64_t ___reconUpdateMark_35;
 	// System.Int64 Characters::deltaUpdateMark
-	int64_t ___deltaUpdateMark_35;
+	int64_t ___deltaUpdateMark_36;
 	// UnityEngine.Transform Characters::testCube
-	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___testCube_36;
+	Transform_tB27202C6F4E36D225EE28A13E4D662BF99785DB1* ___testCube_37;
 	// System.Int32 Characters::unique
-	int32_t ___unique_37;
+	int32_t ___unique_38;
 	// System.Single Characters::timer
-	float ___timer_38;
+	float ___timer_39;
 	// System.Single Characters::refreshMoveAnimationLimit
-	float ___refreshMoveAnimationLimit_39;
+	float ___refreshMoveAnimationLimit_40;
 	// System.Boolean Characters::isStop
-	bool ___isStop_40;
+	bool ___isStop_41;
 };
 
 // ChatController
