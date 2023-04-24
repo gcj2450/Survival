@@ -26,8 +26,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _MeshDeformationLimit: 0
-    - _Scale: 0
+    - _MeshDeformationLimit: 0.97
+    - _Scale: 0.31
     - _WindNoiseScale: 0
     - _WindStrength: 1
     m_Colors:
@@ -35,5 +35,5 @@ Material:
     - _PrimaryCol: {r: 1, g: 1, b: 1, a: 1}
     - _SecondaryCol: {r: 1, g: 0, b: 1, a: 1}
     - _TipColor: {r: 0, g: 0, b: 1, a: 1}
-    - _WindSpeed: {r: 0, g: 0, b: 0, a: 0}
+    - _WindSpeed: {r: 0.18, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []

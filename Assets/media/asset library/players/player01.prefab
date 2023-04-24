@@ -125,6 +125,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6880254197685453956}
   - component: {fileID: 8900913557786445320}
+  - component: {fileID: 7378426030624007857}
+  - component: {fileID: 6576923616206357589}
   m_Layer: 0
   m_Name: player01
   m_TagString: Untagged
@@ -170,6 +172,36 @@ MonoBehaviour:
   mydelta: {x: 0, y: 0, z: 0}
   whatIsPredDelta: {x: 0, y: 0, z: 0}
   testCube: {fileID: 2571830048572860080}
+--- !u!54 &7378426030624007857
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5365322323723623925}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!136 &6576923616206357589
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5365322323723623925}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.3
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &8627362118318732890
 GameObject:
   m_ObjectHideFlags: 0
